@@ -15,7 +15,7 @@
  * along with INAV.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdbool.h>
+/* #include <stdbool.h>
 #include <platform.h>
 #include "drivers/io.h"
 #include "drivers/pwm_mapping.h"
@@ -41,3 +41,4 @@ timerHardware_t timerHardware[] = {
 };
 
 const int timerHardwareCount = sizeof(timerHardware) / sizeof(timerHardware[0]);
+*/

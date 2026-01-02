@@ -42,27 +42,27 @@ set(MIMXRT106X_STARTUP_DIR "${MAIN_SRC_DIR}/startup")
 # is fully ported correctly :) One of the first things on the list.
 main_sources(MIMXRT106X_VCP_SRC
     drivers/serial_usb_vcp_mimxrt106x.c
-    drivers/usb_io.c
+    #drivers/usb_io.c
 )
 
 # TODO PORT - SDCARD? Not yet included, may need to add peripheral.
 main_sources(MIMXRT106X_SDCARD_SRC
-    drivers/sdcard/sdcard.c
-    drivers/sdcard/sdcard_spi.c
-    drivers/sdcard/sdcard_sdio.c
-    drivers/sdcard/sdcard_standard.c
+    #drivers/sdcard/sdcard.c
+    #drivers/sdcard/sdcard_spi.c
+    #drivers/sdcard/sdcard_sdio.c
+    #drivers/sdcard/sdcard_standard.c
 )
 
 # XXX: This code is not STM32 specific
 main_sources(MIMXRT106X_ASYNCFATFS_SRC
-    io/asyncfatfs/asyncfatfs.c
-    io/asyncfatfs/fat_standard.c
+    #io/asyncfatfs/asyncfatfs.c
+    #io/asyncfatfs/fat_standard.c
 )
 
 main_sources(MIMXRT106X_MSC_SRC
-    msc/mimxrt1062_msc_diskio.c
-    msc/emfat.c
-    msc/emfat_file.c
+    #msc/mimxrt106x_msc_diskio.c
+    #msc/emfat.c
+    #msc/emfat_file.c
 )
 
 set(MIMXRT106X_INCLUDE_DIRS

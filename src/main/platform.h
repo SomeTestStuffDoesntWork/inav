@@ -78,6 +78,10 @@ typedef enum
 #define U_ID_1 (*(uint32_t*)0x1fff7a14)
 #define U_ID_2 (*(uint32_t*)0x1fff7a18)
 
+#elif defined(MIMXRT_1062)
+
+#error "NO MIMXRT1062 includes for platform!"
+
 #endif
 
 #include "target/common.h"

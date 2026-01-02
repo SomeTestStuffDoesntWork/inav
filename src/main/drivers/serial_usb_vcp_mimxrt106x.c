@@ -17,7 +17,7 @@
 
  #include "serial_usb_vcp_mimxrt106x.h"
 
- // TODO PORT - Finish implementation!
+ #warning "Implementation not complete for 1062"
 
 void usbVcpInitHardware(void)
 {
@@ -26,10 +26,11 @@ void usbVcpInitHardware(void)
 
 serialPort_t *usbVcpOpen(void)
 {
-    return NULL;
+    return 0;
 }
 
 uint32_t usbVcpGetBaudRate(struct serialPort_s *instance)
 {
+    (void)instance;
     return 115200;
 }

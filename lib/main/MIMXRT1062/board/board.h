@@ -21,7 +21,7 @@
 
 /* The UART to use for debug messages. */
 #define BOARD_DEBUG_UART_CLK_FREQ BOARD_DebugConsoleSrcFreq()
-#define BOARD_DEBUG_UART_TYPE     kSerialPort_UsbCdc
+#define BOARD_DEBUG_UART_TYPE     kSerialPort_Uart
 #ifndef BOARD_DEBUG_UART_BASEADDR
 #define BOARD_DEBUG_UART_BASEADDR (uint32_t) LPUART1
 #endif

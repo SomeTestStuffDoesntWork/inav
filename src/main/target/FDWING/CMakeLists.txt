@@ -1,1 +1,1 @@
-target_mimxrt1062dvj6b(FAFWING)
+target_mimxrt1062dvj6b(FDWING)

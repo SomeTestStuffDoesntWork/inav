@@ -15,28 +15,32 @@
  * along with Cleanflight.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
-// TODO: Remove!
-typedef struct {uint32_t fake_data} serialPort_t;
+#if defined(MIMXRT_1062)
+#include "fsl_assert.h"
+#include "DbgUtil.h"
+#endif
 
-typedef struct {
-    serialPort_t port;
+#if defined(SITL_BUILD)
+int main(int argc, char *argv[])
+{
+    parseArguments(argc, argv);
+#else
+int main(void)
+{
+#endif
+    #warning "In Main Function"
 
-    // Buffer used during bulk writes.
-    uint8_t txBuf[20];
-    uint8_t txAt;
-    // Set if the port is in bulk write mode and can buffer.
-    bool buffering;
-} vcpPort_t;
+    while (true) {
+#if defined(SITL_BUILD)
+        
+#endif
 
-// TODO PORT - Cleanup any remaining items.
+#if defined(MIMXRT_1062)
+        indicateAlive();
+#endif
 
-void usbVcpInitHardware(void);
-serialPort_t *usbVcpOpen(void);
-struct serialPort_s;
-uint32_t usbVcpGetBaudRate(struct serialPort_s *instance);
- 
+    }
+}
