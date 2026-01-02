@@ -41,7 +41,7 @@ set(MIMXRT106X_STARTUP_DIR "${MAIN_SRC_DIR}/startup")
 # TODO PORT - we do support a vcom serial, just need to make sure that it
 # is fully ported correctly :) One of the first things on the list.
 main_sources(MIMXRT106X_VCP_SRC
-    drivers/serial_usb_vcp_mimxrt1062.c
+    drivers/serial_usb_vcp_mimxrt106x.c
     drivers/usb_io.c
 )
 
@@ -60,7 +60,7 @@ main_sources(MIMXRT106X_ASYNCFATFS_SRC
 )
 
 main_sources(MIMXRT106X_MSC_SRC
-    msc/at32_msc_diskio.c
+    msc/mimxrt1062_msc_diskio.c
     msc/emfat.c
     msc/emfat_file.c
 )
@@ -139,7 +139,7 @@ macro(get_mimxrt106x_target_features output_var dir target_name)
 endmacro()
 
 # TODO PORT - Not sure what the purpose of this is, may need to modify to fit our feature set.
-function(get_at32_flash_size out size)
+function(get_mimxrt106x_flash_size out size)
     # 4: 16, 6: 32, 8: 64, B: 128, C: 256, D: 384, E: 512, F: 768, G: 1024, H: 1536, I: 2048 KiB
     string(TOUPPER ${size} s)
     if(${s} STREQUAL "4")
@@ -277,7 +277,7 @@ function(add_mimxrt106x_executable)
 endfunction()
 
 #  Main function of MIMXRT106X
-function(target_at32)
+function(target_mimxrt106x)
     if(NOT arm-none-eabi STREQUAL TOOLCHAIN)
         return()
     endif()
@@ -299,7 +299,7 @@ function(target_at32)
         # Not supported, will be ignored in build.
         set(hse_mhz ${args_HSE_MHZ})
     else()
-        set(hse_mhz ${AT32_DEFAULT_HSE_MHZ})
+        set(hse_mhz ${MIMXRT106X_DEFAULT_HSE_MHZ})
     endif()
 
     set(target_sources ${MIMXRT106X_STARTUP_DIR}/${args_STARTUP})
@@ -311,9 +311,9 @@ function(target_at32)
 
     set(target_include_directories ${args_INCLUDE_DIRECTORIES})
 
-    set(target_definitions ${AT32_DEFINITIONS} ${COMMON_COMPILE_DEFINITIONS})
+    set(target_definitions ${MIMXRT106X_DEFINITIONS} ${COMMON_COMPILE_DEFINITIONS})
 
-    get_at32_target_features(features "${CMAKE_CURRENT_SOURCE_DIR}" ${name})
+    get_mimxrt106x_target_features(features "${CMAKE_CURRENT_SOURCE_DIR}" ${name})
     set_property(TARGET ${elf_target} PROPERTY FEATURES ${features})
 
     if(VCP IN_LIST features)

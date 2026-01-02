@@ -15,7 +15,7 @@
  * along with Cleanflight.  If not, see <http://www.gnu.org/licenses/>.
  */
 
- #include "serial_usb_vcp_mimxrt1062.h"
+ #include "serial_usb_vcp_mimxrt106x.h"
 
  // TODO PORT - Finish implementation!
 
