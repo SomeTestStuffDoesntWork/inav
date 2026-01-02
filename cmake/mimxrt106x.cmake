@@ -1,387 +1,129 @@
-include(mimxrt1062)
+include(cortex-m7)
 
-include(CMakeParseArguments)
+# MIMXRT106X Common Package *******************************************************************************************
+set(MIMXRT106X_SDK_SRC_DIR "${MAIN_LIB_DIR}/main/MIMXRT1XXX/MIMXRT106X")
 
-option(DEBUG_HARDFAULTS "Enable debugging of hard faults via custom handler")
-option(SEMIHOSTING "Enable semihosting")
+# Setup the flat include directory for the drivers (NOTE - migration from SDK *requires* this as all their
+# cross-driver includes are flat)
+set(MIMXRT106X_SDK_CMSIS_DIR "${MIMXRT106X_SDK_SRC_DIR}/CMSIS")
+set(MIMXRT106X_SDK_USB_DIR "${MIMXRT106X_SDK_SRC_DIR}/USB")
+set(MIMXRT106X_SDK_DRIVER_DIR "${MIMXRT106X_SDK_SRC_DIR}/drivers")
+set(MIMXRT106X_SDK_COMPONENT_DIR "${MIMXRT106X_SDK_SRC_DIR}/component")
+set(MIMXRT106X_SDK_UTIL_DIR "${MIMXRT106X_SDK_SRC_DIR}/utilities")
+set(MIMXRT106X_SDK_XIP_DIR "${MIMXRT106X_SDK_SRC_DIR}/xip")
 
-message("-- DEBUG_HARDFAULTS: ${DEBUG_HARDFAULTS}, SEMIHOSTING: ${SEMIHOSTING}")
+file(GLOB_RECURSE MIMXRT106X_SDK_SRC "${MIMXRT106X_SDK_SRC_DIR}/*.c")
 
-# TODO PORT - These are all generic CMSIS - need these. CMSIS specifics are in device specific cmake
-set(CMSIS_DIR "${MAIN_LIB_DIR}/main/CMSIS")
-set(CMSIS_INCLUDE_DIR "${CMSIS_DIR}/Core/Include")
-set(CMSIS_DSP_DIR "${MAIN_LIB_DIR}/main/CMSIS/DSP")
-set(CMSIS_DSP_INCLUDE_DIR "${CMSIS_DSP_DIR}/Include")
-
-# DSP use common
-set(CMSIS_DSP_DIR "${MAIN_LIB_DIR}/main/CMSIS/DSP")
-set(CMSIS_DSP_INCLUDE_DIR "${CMSIS_DSP_DIR}/Include")
-
-set(CMSIS_DSP_SRC
-    BasicMathFunctions/arm_scale_f32.c
-    BasicMathFunctions/arm_sub_f32.c
-    BasicMathFunctions/arm_mult_f32.c
-    BasicMathFunctions/arm_offset_f32.c
-    TransformFunctions/arm_rfft_fast_f32.c
-    TransformFunctions/arm_cfft_f32.c
-    TransformFunctions/arm_rfft_fast_init_f32.c
-    TransformFunctions/arm_cfft_radix8_f32.c
-    TransformFunctions/arm_bitreversal2.S
-    CommonTables/arm_common_tables.c
-    ComplexMathFunctions/arm_cmplx_mag_f32.c
-    StatisticsFunctions/arm_max_f32.c
-    StatisticsFunctions/arm_rms_f32.c
-    StatisticsFunctions/arm_std_f32.c
-    StatisticsFunctions/arm_mean_f32.c
-)
-list(TRANSFORM CMSIS_DSP_SRC PREPEND "${CMSIS_DSP_DIR}/Source/")
-
-set(MIMXRT106X_STARTUP_DIR "${MAIN_SRC_DIR}/startup")
-
-# TODO PORT - we do support a vcom serial, just need to make sure that it
-# is fully ported correctly :) One of the first things on the list.
-main_sources(MIMXRT106X_VCP_SRC
-    drivers/serial_usb_vcp_mimxrt106x.c
-    #drivers/usb_io.c
-)
-
-# TODO PORT - SDCARD? Not yet included, may need to add peripheral.
-main_sources(MIMXRT106X_SDCARD_SRC
-    #drivers/sdcard/sdcard.c
-    #drivers/sdcard/sdcard_spi.c
-    #drivers/sdcard/sdcard_sdio.c
-    #drivers/sdcard/sdcard_standard.c
-)
-
-# XXX: This code is not STM32 specific
-main_sources(MIMXRT106X_ASYNCFATFS_SRC
-    #io/asyncfatfs/asyncfatfs.c
-    #io/asyncfatfs/fat_standard.c
-)
-
-main_sources(MIMXRT106X_MSC_SRC
-    #msc/mimxrt106x_msc_diskio.c
-    #msc/emfat.c
-    #msc/emfat_file.c
-)
-
+# Don't think that any 1062-specific files are required yet. Abstraction layer where these would
+# be swapped out should be at the 10xx level, not MCU specific. TODO PORT - After port is functional, 
+# remove old template.
+# main_sources(AT32F4_SRC
+#     target/system_at32f435_437.c
+#     config/config_streamer_at32f43x.c
+#     config/config_streamer_ram.c
+#     config/config_streamer_extflash.c 
+#     drivers/adc_at32f43x.c
+#     drivers/i2c_application.c
+#     drivers/bus_i2c_at32f43x.c
+#     drivers/bus_spi_at32f43x
+#     drivers/serial_uart_hal_at32f43x.c
+#     drivers/serial_uart_at32f43x.c
+# 
+#     drivers/system_at32f43x.c
+#     drivers/timer.c
+#     drivers/timer_impl_stdperiph_at32.c
+#     drivers/timer_at32f43x.c
+#     drivers/uart_inverter.c
+#     drivers/dma_at32f43x.c
+# )
+ 
 set(MIMXRT106X_INCLUDE_DIRS
-    "${CMSIS_INCLUDE_DIR}"
-    "${CMSIS_DSP_INCLUDE_DIR}"
-    "${MAIN_SRC_DIR}/target"
+    ${MIMXRT106X_SDK_CMSIS_DIR}
+    ${MIMXRT106X_SDK_USB_DIR}
+    ${MIMXRT106X_SDK_DRIVER_DIR}
+    ${MIMXRT106X_SDK_COMPONENT_DIR}
+    ${MIMXRT106X_SDK_UTIL_DIR}
+    ${MIMXRT106X_SDK_XIP_DIR}
 )
 
 set(MIMXRT106X_DEFINITIONS
+    ${CORTEX_M7_DEFINITIONS}
+    DATA_SECTION_IS_CACHEABLE=0
+    SDK_DEBUGCONSOLE=1
+    XIP_EXTERNAL_FLASH=1
+    XIP_BOOT_HEADER_ENABLE=1
+    USB_STACK_BM
+    FSL_OSA_BM_TASK_ENABLE=0
+    FSL_OSA_BM_TIMER_CONFIG=0
+    SDK_OS_BAREMETAL
+    MCUXPRESSO_SDK
+    SDK_OS_BAREMETAL
+    CR_INTEGER_PRINTF
+    PRINTF_FLOAT_ENABLE=0
+    __MCUXPRESSO
+    __USE_CMSIS
+    MIMXRT_106X
 )
 
-set(MIMXRT106X_DEFAULT_HSE_MHZ 8)
-set(MIMXRT106X_LINKER_DIR "${MAIN_SRC_DIR}/target/link")
 set(MIMXRT106X_COMPILE_OPTIONS
-    -ffunction-sections
-    -fdata-sections
-    -fno-common
+     -fno-common 
+     -g3 
+     -gdwarf-4 
+     -c 
+     -ffunction-sections 
+     -fdata-sections 
+     -fno-builtin 
+     -fmerge-constants
 )
 
-set(MIMXRT106X_LINK_LIBRARIES
-    -lm
-    -lc
-)
-
-if(SEMIHOSTING)
-    list(APPEND MIMXRT106X_LINK_LIBRARIES --specs=rdimon.specs -lrdimon)
-    list(APPEND MIMXRT106X_DEFINITIONS SEMIHOSTING)
-else()
-    list(APPEND MIMXRT106X_LINK_LIBRARIES -lnosys)
-endif()
-
-set(MIMXRT106X_LINK_OPTIONS
-    #-nostartfiles
-    --specs=nano.specs
-    -static
-    -Wl,-gc-sections
-    -Wl,-L${MIMXRT106X_LINKER_DIR}
-    -Wl,--cref
-    -Wl,--no-wchar-size-warning
-    -Wl,--print-memory-usage
-    -Wl,--no-warn-rwx-segments
-)
-# Get target features
-macro(get_mimxrt106x_target_features output_var dir target_name)
-    execute_process(COMMAND "${CMAKE_C_COMPILER}" -E -dD -D${ARGV2} "${ARGV1}/target.h"
-        ERROR_VARIABLE _errors
-        RESULT_VARIABLE _result
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-        OUTPUT_VARIABLE _contents)
-
-    if(NOT _result EQUAL 0)
-        message(FATAL_ERROR "error extracting features for MIMXRT106x target ${ARGV2}: ${_errors}")
-    endif()
-
-    string(REGEX MATCH "#define[\t ]+USE_VCP" HAS_VCP ${_contents})
-    if(HAS_VCP)
-        list(APPEND ${ARGV0} VCP)
-    endif()
-    string(REGEX MATCH "define[\t ]+USE_FLASHFS" HAS_FLASHFS ${_contents})
-    if(HAS_FLASHFS)
-        list(APPEND ${ARGV0} FLASHFS)
-    endif()
-    string(REGEX MATCH "define[\t ]+USE_SDCARD" HAS_SDCARD ${_contents})
-    if (HAS_SDCARD)
-        list(APPEND ${ARGV0} SDCARD)
-        string(REGEX MATCH "define[\t ]+USE_SDCARD_SDIO" HAS_SDIO ${_contents})
-        if (HAS_SDIO)
-            list(APPEND ${ARGV0} SDIO)
-        endif()
-    endif()
-    if(HAS_FLASHFS OR HAS_SDCARD)
-        list(APPEND ${ARGV0} MSC)
-    endif()
-endmacro()
-
-# TODO PORT - Not sure what the purpose of this is, may need to modify to fit our feature set.
-function(get_mimxrt106x_flash_size out size)
-    # 4: 16, 6: 32, 8: 64, B: 128, C: 256, D: 384, E: 512, F: 768, G: 1024, H: 1536, I: 2048 KiB
-    string(TOUPPER ${size} s)
-    if(${s} STREQUAL "4")
-        set(${out} 16 PARENT_SCOPE)
-        return()
-    endif()
-    if(${s} STREQUAL "6")
-        set(${out} 32 PARENT_SCOPE)
-        return()
-    endif()
-    if(${s} STREQUAL "8")
-        set(${out} 64 PARENT_SCOPE)
-        return()
-    endif()
-    if(${s} STREQUAL "8")
-        set(${out} 64 PARENT_SCOPE)
-        return()
-    endif()
-    if(${s} STREQUAL "B")
-        set(${out} 128 PARENT_SCOPE)
-        return()
-    endif()
-    if(${s} STREQUAL "C")
-        set(${out} 256 PARENT_SCOPE)
-        return()
-    endif()
-    if(${s} STREQUAL "D")
-        set(${out} 384 PARENT_SCOPE)
-        return()
-    endif()
-    if(${s} STREQUAL "E")
-        set(${out} 512 PARENT_SCOPE)
-        return()
-    endif()
-    if(${s} STREQUAL "F")
-        set(${out} 768 PARENT_SCOPE)
-        return()
-    endif()
-    if(${s} STREQUAL "G")
-        set(${out} 1024 PARENT_SCOPE)
-        return()
-    endif()
-    if(${s} STREQUAL "H")
-        set(${out} 1536 PARENT_SCOPE)
-        return()
-    endif()
-    if(${s} STREQUAL "I")
-        set(${out} 2048 PARENT_SCOPE)
-        return()
-    endif()
-endfunction()
-
-function(add_hex_target name exe hex)
-    add_custom_target(${name} ALL
-        cmake -E env PATH="$ENV{PATH}"
-        # TODO PORT - Should be able to copy out of the elf to hex. At least that is what is recommended by
-        # vendor SDK.... 106x executes directly out of flash and does not need a bootloader (flash is external)
-        ${CMAKE_OBJCOPY} -O ihex $<TARGET_FILE:${exe}> ${hex}
-        BYPRODUCTS ${hex}
-    )
-endfunction()
-
-function(add_bin_target name exe bin)
-    add_custom_target(${name}
-        cmake -E env PATH="$ENV{PATH}"
-        ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${exe}> ${bin}
-        BYPRODUCTS ${bin}
-    )
-endfunction()
-
-function(generate_map_file target)
-    if(CMAKE_VERSION VERSION_LESS 3.15)
-        set(map "$<TARGET_FILE:${target}>.map")
-    else()
-        set(map "$<TARGET_FILE_DIR:${target}>/$<TARGET_FILE_BASE_NAME:${target}>.map")
-    endif()
-    target_link_options(${target} PRIVATE "-Wl,-Map,${map}")
-endfunction()
-
-# TODO PORT - Definitely need to get the linker script brought over pronto.
-function(set_linker_script target script)
-    set(script_path ${MIMXRT106X_LINKER_DIR}/${args_LINKER_SCRIPT}.ld)
-    if(NOT EXISTS ${script_path})
-        message(FATAL_ERROR "linker script ${script_path} doesn't exist")
-    endif()
-    set_target_properties(${target} PROPERTIES LINK_DEPENDS ${script_path})
-    target_link_options(${elf_target} PRIVATE -T${script_path})
-endfunction()
-
-function(add_mimxrt106x_executable)
-    cmake_parse_arguments(
-        args
-        # Boolean arguments
-        ""
-        # Single value arguments
-        "FILENAME;NAME;OPTIMIZATION;OUTPUT_BIN_FILENAME;OUTPUT_HEX_FILENAME;OUTPUT_TARGET_NAME"
-        # Multi-value arguments
-        "COMPILE_DEFINITIONS;COMPILE_OPTIONS;INCLUDE_DIRECTORIES;LINK_OPTIONS;LINKER_SCRIPT;SOURCES"
-        # Start parsing after the known arguments
-        ${ARGN}
-    )
-    set(elf_target ${args_NAME}.elf)
-    add_executable(${elf_target})
-    target_sources(${elf_target} PRIVATE ${args_SOURCES})
-    target_include_directories(${elf_target} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${args_INCLUDE_DIRECTORIES} ${MIMXRT106X_INCLUDE_DIRS})
-    target_compile_definitions(${elf_target} PRIVATE ${args_COMPILE_DEFINITIONS})
-    target_compile_options(${elf_target} PRIVATE ${MIMXRT106X_COMPILE_OPTIONS} ${args_COMPILE_OPTIONS})
-    if(WARNINGS_AS_ERRORS)
-        target_compile_options(${elf_target} PRIVATE -Werror)
-    endif()
-    if (IS_RELEASE_BUILD)
-        target_compile_options(${elf_target} PRIVATE ${args_OPTIMIZATION})
-        target_link_options(${elf_target} PRIVATE ${args_OPTIMIZATION})
-    endif()
-    target_link_libraries(${elf_target} PRIVATE ${MIMXRT106X_LINK_LIBRARIES})
-    target_link_options(${elf_target} PRIVATE ${MIMXRT106X_LINK_OPTIONS} ${args_LINK_OPTIONS})
-    generate_map_file(${elf_target})
-    set_linker_script(${elf_target} ${args_LINKER_SCRIPT})
-    if(args_FILENAME)
-        set(basename ${CMAKE_BINARY_DIR}/${args_FILENAME})
-        set(hex_filename ${basename}.hex)
-        add_hex_target(${args_NAME} ${elf_target} ${hex_filename})
-        set(bin_filename ${basename}.bin)
-        add_bin_target(${args_NAME}.bin ${elf_target} ${bin_filename})
-    endif()
-    if(args_OUTPUT_BIN_FILENAME)
-        set(${args_OUTPUT_BIN_FILENAME} ${bin_filename} PARENT_SCOPE)
-    endif()
-    if(args_OUTPUT_TARGET_NAME)
-        set(${args_OUTPUT_TARGET_NAME} ${elf_target} PARENT_SCOPE)
-    endif()
-    if(args_OUTPUT_HEX_FILENAME)
-        set(${args_OUTPUT_HEX_FILENAME} ${hex_filename} PARENT_SCOPE)
-    endif()
-endfunction()
-
-#  Main function of MIMXRT106X
 function(target_mimxrt106x)
-    if(NOT arm-none-eabi STREQUAL TOOLCHAIN)
-        return()
-    endif()
-    # Parse keyword arguments
-    cmake_parse_arguments(
-        args
-        # Boolean arguments
-        "DISABLE_MSC;BOOTLOADER"
-        # Single value arguments
-        "HSE_MHZ;LINKER_SCRIPT;NAME;OPENOCD_TARGET;OPTIMIZATION;STARTUP;SVD"
-        # Multi-value arguments
-        "COMPILE_DEFINITIONS;COMPILE_OPTIONS;INCLUDE_DIRECTORIES;LINK_OPTIONS;SOURCES;MSC_SOURCES;MSC_INCLUDE_DIRECTORIES;VCP_SOURCES;VCP_INCLUDE_DIRECTORIES"
-        # Start parsing after the known arguments
+    target_mimxrt1xxx(
+        SOURCES ${MIMXRT106X_SDK_SRC}
+        COMPILE_DEFINITIONS ${MIMXRT106X_DEFINITIONS}
+        COMPILE_OPTIONS ${CORTEX_M7_COMMON_OPTIONS} ${CORTEX_M7_COMPILE_OPTIONS} ${MIMXRT106X_COMPILE_OPTIONS}
+        INCLUDE_DIRECTORIES ${MIMXRT106X_INCLUDE_DIRS}
+        LINK_OPTIONS ${CORTEX_M7_COMMON_OPTIONS} ${CORTEX_M7_LINK_OPTIONS}
+        OPTIMIZATION -O2
         ${ARGN}
     )
-    set(name ${args_NAME})
+endfunction()
 
-    if (args_HSE_MHZ)
-        # Not supported, will be ignored in build.
-        set(hse_mhz ${args_HSE_MHZ})
-    else()
-        set(hse_mhz ${MIMXRT106X_DEFAULT_HSE_MHZ})
-    endif()
 
-    set(target_sources ${MIMXRT106X_STARTUP_DIR}/${args_STARTUP})
-    list(APPEND target_sources ${args_SOURCES})
+# MIMXRT1062 Targets **************************************************************************************************
 
-    file(GLOB target_c_sources "${CMAKE_CURRENT_SOURCE_DIR}/*.c")
-    file(GLOB target_h_sources "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
-    list(APPEND target_sources ${target_c_sources} ${target_h_sources})
+set(MIMXRT1062_SDK_SRC_DIR "${MAIN_LIB_DIR}/main/MIMXRT1XXX/MIMXRT1062")
 
-    set(target_include_directories ${args_INCLUDE_DIRECTORIES})
+set(MIMXRT1062_SDK_BOARD_DIR "${MIMXRT1062_SDK_SRC_DIR}/board")
+set(MIMXRT1062_SDK_DEVICE_DIR "${MIMXRT1062_SDK_SRC_DIR}/device")
+set(MIMXRT1062_SDK_XIP_DIR "${MIMXRT1062_SDK_SRC_DIR}/xip")
+set(MIMXRT1062_SDK_UTIL_DIR "${MIMXRT1062_SDK_SRC_DIR}/utilities")
 
-    set(target_definitions ${MIMXRT106X_DEFINITIONS} ${COMMON_COMPILE_DEFINITIONS})
+file(GLOB_RECURSE MIMXRT1062_SDK_SRC "${MIMXRT1062_SDK_SRC_DIR}/*.c")
 
-    get_mimxrt106x_target_features(features "${CMAKE_CURRENT_SOURCE_DIR}" ${name})
-    set_property(TARGET ${elf_target} PROPERTY FEATURES ${features})
+set(MIMXRT1062_INCLUDE_DIRS
+    ${MIMXRT1062_SDK_BOARD_DIR}
+    ${MIMXRT1062_SDK_DEVICE_DIR}
+    ${MIMXRT1062_SDK_XIP_DIR}
+    ${MIMXRT1062_SDK_UTIL_DIR}
+)
 
-    if(VCP IN_LIST features)
-        list(APPEND target_sources ${MIMXRT106X_VCP_SRC} ${args_VCP_SOURCES})
-        list(APPEND target_include_directories ${args_VCP_INCLUDE_DIRECTORIES})
-    endif()
-    if(SDCARD IN_LIST features)
-        list(APPEND target_sources ${MIMXRT106X_SDCARD_SRC} ${MIMXRT106X_ASYNCFATFS_SRC})
-    endif()
+# DVJ6B is the initial target device, however actual 1062xxxxA and 1062xxxxB differ by such a small
+# ammount that it is most likely not worth defining a target for each.
+# Flash on these chips is external and need to be called out by the flash size of the target.
+set(mimxrt1062dvj6b_COMPILE_DEFINITIONS
+        CPU_MIMXRT1062DVJ6B
+        MIMXRT_1062
+)
 
-    set(msc_sources)
-    if(NOT args_DISABLE_MSC AND MSC IN_LIST features)
-        list(APPEND target_include_directories ${args_MSC_INCLUDE_DIRECTORIES})
-        list(APPEND msc_sources ${MIMXRT106X_MSC_SRC} ${args_MSC_SOURCES})
-        list(APPEND target_definitions USE_USB_MSC)
-        if(FLASHFS IN_LIST features)
-            list(APPEND msc_sources ${MIMXRT106X_MSC_FLASH_SRC})
-        endif()
-        if (SDCARD IN_LIST features)
-            list(APPEND msc_sources ${MIMXRT106X_MSC_SDCARD_SRC})
-        endif()
-    endif()
-
-    math(EXPR hse_value "${hse_mhz} * 1000000")
-    list(APPEND target_definitions "HSE_VALUE=${hse_value}")
-
-    if (MSP_UART) 
-        list(APPEND target_definitions "MSP_UART=${MSP_UART}")
-    endif()
-
-    if(args_COMPILE_DEFINITIONS)
-        list(APPEND target_definitions ${args_COMPILE_DEFINITIONS})
-    endif()
-    if(DEBUG_HARDFAULTS)
-        list(APPEND target_definitions DEBUG_HARDFAULTS)
-    endif()
-
-    string(TOLOWER ${PROJECT_NAME} lowercase_project_name)
-    set(binary_name ${lowercase_project_name}_${FIRMWARE_VERSION}_${name})
-    if(DEFINED BUILD_SUFFIX AND NOT "" STREQUAL "${BUILD_SUFFIX}")
-        set(binary_name "${binary_name}_${BUILD_SUFFIX}")
-    endif()
-
-    # Main firmware
-    add_mimxrt106x_executable(
+function(target_mimxrt1062dvj6b name)
+    target_mimxrt106x(
         NAME ${name}
-        FILENAME ${binary_name}
-        SOURCES ${target_sources} ${msc_sources} ${CMSIS_DSP_SRC} ${COMMON_SRC}
-        COMPILE_DEFINITIONS ${target_definitions}
-        COMPILE_OPTIONS ${args_COMPILE_OPTIONS}
-        INCLUDE_DIRECTORIES ${target_include_directories}
-        LINK_OPTIONS ${args_LINK_OPTIONS}
-        LINKER_SCRIPT ${args_LINKER_SCRIPT}
-        OPTIMIZATION ${args_OPTIMIZATION}
-
-        OUTPUT_BIN_FILENAME main_bin_filename
-        OUTPUT_HEX_FILENAME main_hex_filename
-        OUTPUT_TARGET_NAME main_target_name
-
+        STARTUP startup_mimxrt1062.c
+        INCLUDE_DIRECTORIES ${MIMXRT1062_INCLUDE_DIRS}
+        SOURCES ${MIMXRT1062_SDK_SRC}
+        COMPILE_DEFINITIONS ${mimxrt1062dvj6b_COMPILE_DEFINITIONS}
+        LINKER_SCRIPT mimxrt1062xxxxb
+        # SVD
+        ${ARGN}
     )
-
-    set_property(TARGET ${main_target_name} PROPERTY OPENOCD_TARGET ${args_OPENOCD_TARGET})
-    set_property(TARGET ${main_target_name} PROPERTY OPENOCD_DEFAULT_INTERFACE atlink)
-    set_property(TARGET ${main_target_name} PROPERTY SVD ${args_SVD})
-
-    setup_firmware_target(${main_target_name} ${name} ${ARGN})
-
-    if(args_BOOTLOADER)
-        message("Bootloader for MIMXRT106X Target Not Supported! No bootloader will be built")
-    endif()
 endfunction()

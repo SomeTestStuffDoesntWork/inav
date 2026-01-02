@@ -5,8 +5,8 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#ifndef __EVKMIMXRT1060_FLEXSPI_NOR_CONFIG__
-#define __EVKMIMXRT1060_FLEXSPI_NOR_CONFIG__
+#ifndef __MIMXRT106X_FLEXSPI_NOR_CONFIG__
+#define __MIMXRT106X_FLEXSPI_NOR_CONFIG__
 
 #include <stdint.h>
 #include <stdbool.h>

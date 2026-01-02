@@ -15,9 +15,8 @@
  * along with Cleanflight.  If not, see <http://www.gnu.org/licenses/>.
  */
 
- #include "serial_usb_vcp_mimxrt106x.h"
+#include "serial_usb_vcp_mimxrt1xxx.h"
 
- #warning "Implementation not complete for 1062"
 
 void usbVcpInitHardware(void)
 {

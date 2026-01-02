@@ -19,28 +19,26 @@
 #include <stdint.h>
 
 #if defined(MIMXRT_1062)
-#include "fsl_assert.h"
+#include "fsl_clock.h"
 #include "DbgUtil.h"
 #endif
 
-#if defined(SITL_BUILD)
-int main(int argc, char *argv[])
-{
-    parseArguments(argc, argv);
-#else
-int main(void)
-{
-#endif
-    #warning "In Main Function"
+int main(void) {
 
-    while (true) {
-#if defined(SITL_BUILD)
-        
-#endif
+    /* Init board hardware. */
+    BOARD_ConfigMPU();
+    BOARD_InitBootPins();
+    BOARD_InitBootClocks();
+    BOARD_InitBootPeripherals();
 
-#if defined(MIMXRT_1062)
-        indicateAlive();
-#endif
+    // Blink three times to say we are alive.
+    blinkLed(3);
+    while(1)
+    {
+    	// Blink 2 times to indicate we are in the main processing loop
+    	blinkLed(2);
 
+    	SDK_DelayAtLeastUs(2000000, SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY);
     }
+    return 0 ;
 }
