@@ -91,6 +91,7 @@ endif()
 
 include(stm32)
 include(at32)
+include(mimxrt106x)
 include(sitl)
 
 add_subdirectory(src)
