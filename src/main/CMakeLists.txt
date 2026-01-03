@@ -1,17 +1,17 @@
 
-#main_sources(COMMON_SRC
-#    main.c
+main_sources(COMMON_SRC
+     main.c
 #
 #    target/common_hardware.c
 #
-#    build/assert.c
-#    build/assert.h
+     build/assert.c
+     build/assert.h
 #    build/build_config.c
 #    build/build_config.h
-#    build/debug.c
-#    build/debug.h
-#    build/version.c
-#    build/version.h
+     build/debug.c
+     build/debug.h
+     build/version.c
+     build/version.h
 #
 #    common/bitarray.c
 #    common/bitarray.h
@@ -33,22 +33,22 @@
 #    common/log.h
 #    common/lulu.c
 #    common/lulu.h
-#    common/maths.c
-#    common/maths.h
-#    common/memory.c
-#    common/memory.h
+     common/maths.c
+     common/maths.h
+     common/memory.c
+     common/memory.h
 #    common/olc.c
 #    common/olc.h
-#    common/printf.c
-#    common/printf.h
+     common/printf.c
+     common/printf.h
 #    common/streambuf.c
 #    common/streambuf.h
-#    common/string_light.c
-#    common/string_light.h
-#    common/time.c
-#    common/time.h
-#    common/typeconversion.c
-#    common/typeconversion.h
+     common/string_light.c
+     common/string_light.h
+     common/time.c
+     common/time.h
+     common/typeconversion.c
+     common/typeconversion.h
 #    common/uvarint.c
 #    common/uvarint.h
 #    common/circular_queue.c
@@ -58,8 +58,8 @@
 #    config/config_eeprom.h
 #    config/config_streamer.c
 #    config/config_streamer.h
-#    config/feature.c
-#    config/feature.h
+     config/feature.c
+     config/feature.h
 #    config/parameter_group.c
 #    config/parameter_group.h
 #    config/general_settings.c
@@ -123,8 +123,8 @@
 #    drivers/barometer/barometer_2smpb_02b.c
 #    drivers/barometer/barometer_2smpb_02b.h
 #
-#    drivers/buf_writer.c
-#    drivers/buf_writer.h
+     drivers/buf_writer.c
+     drivers/buf_writer.h
 #    drivers/bus.c
 #    drivers/bus.h
 #    drivers/bus_busdev_i2c.c
@@ -267,8 +267,8 @@
 #    drivers/temperature/lm75.c
 #    drivers/temperature/lm75.h
 #
-#    drivers/time.c
-#    drivers/time.h
+     drivers/time.c
+     drivers/time.h
 #    drivers/timer.c
 #    drivers/timer.h
 #    drivers/usb_msc.c
@@ -276,8 +276,8 @@
 #    drivers/vtx_common.c
 #    drivers/vtx_common.h
 #
-#    fc/cli.c
-#    fc/cli.h
+     fc/cli.c
+     fc/cli.h
 #    fc/config.c
 #    fc/config.h
 #    fc/control_profile.c
@@ -285,10 +285,10 @@
 #    fc/control_profile_config_struct.h
 #    fc/fc_core.c
 #    fc/fc_core.h
-#    fc/fc_init.c
-#    fc/fc_init.h
-#    fc/fc_tasks.c
-#    fc/fc_tasks.h
+     fc/fc_init.c
+     fc/fc_init.h
+     fc/fc_tasks.c
+     fc/fc_tasks.h
 #    fc/fc_hardfaults.c
 #    fc/fc_msp.c
 #    fc/fc_msp.h
@@ -314,8 +314,8 @@
 #    fc/runtime_config.h
 #    fc/settings.c
 #    fc/settings.h
-#    fc/stats.c
-#    fc/stats.h
+     fc/stats.c
+     fc/stats.h
 #
 #    flight/failsafe.c
 #    flight/failsafe.h
@@ -440,8 +440,8 @@
 #    rx/sim.h
 #
 #
-#    scheduler/scheduler.c
-#    scheduler/scheduler.h
+     scheduler/scheduler.c
+     scheduler/scheduler.h
 #
 #    sensors/acceleration.c
 #    sensors/acceleration.h
@@ -626,11 +626,7 @@
 #    telemetry/sim.h
 #    telemetry/telemetry.c
 #    telemetry/telemetry.h
-#)
-
-message("Adding test main function")
-# TODO PORT - After completion, add sources back in!
-main_sources(COMMON_SRC alt_main.c)
+)
  
 add_subdirectory(target)
  

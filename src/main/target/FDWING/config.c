@@ -25,12 +25,13 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-/* #include "platform.h"
+#include "platform.h"
 
 #include "fc/fc_msp_box.h"
 #include "io/serial.h"
 #include "io/piniobox.h"
 
+/*
 void targetConfiguration(void)
 {
     serialConfigMutable()->portConfigs[findSerialPortIndexByIdentifier(SERIAL_PORT_USART1)].functionMask = FUNCTION_RX_SERIAL;

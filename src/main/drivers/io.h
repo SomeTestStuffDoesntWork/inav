@@ -88,6 +88,11 @@
 #define IOCFG_IN_FLOATING    IO_CONFIG(GPIO_MODE_INPUT,  GPIO_DRIVE_STRENGTH_MODERATE, GPIO_OUTPUT_PUSH_PULL, GPIO_PULL_NONE)
 #define IOCFG_IPU_25         IO_CONFIG(GPIO_MODE_INPUT,  GPIO_DRIVE_STRENGTH_MODERATE, GPIO_OUTPUT_PUSH_PULL, GPIO_PULL_UP)
 
+#elif defined(MIMXRT_106X)
+
+// IO for the NXP devices are very different, but are abstracted through a HAL.
+#include "mimxrt106x_io_hal.h"
+
 #elif defined(UNIT_TEST) || defined(SITL_BUILD)
 
 # define IOCFG_OUT_PP         0

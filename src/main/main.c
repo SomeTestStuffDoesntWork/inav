@@ -25,6 +25,13 @@
 
 #include "fc/fc_init.h"
 
+#if defined(MIMXRT_106X)
+#warning "Main.c contains debug modifications to short circuit the processing logic. TODO: Remove"
+
+// Grab some of the debug utils.
+#include "DbgUtil.h"
+#endif
+
 #include "scheduler/scheduler.h"
 
 #if defined(SITL_BUILD)
@@ -40,6 +47,7 @@ serialPort_t *loopbackPort;
 static void loopbackInit(void)
 {
 #ifdef SOFTSERIAL_LOOPBACK
+#warning "Soft Serial is defined!"
     loopbackPort = softSerialLoopbackPort();
     serialPrint(loopbackPort, "LOOPBACK\r\n");
 #endif
@@ -47,6 +55,8 @@ static void loopbackInit(void)
 
 static void processLoopback(void)
 {
+    // For now, flash an LED to indicate that the device is alive.
+    blinkLed(1);
 #ifdef SOFTSERIAL_LOOPBACK
     if (loopbackPort) {
         uint8_t bytesWaiting;

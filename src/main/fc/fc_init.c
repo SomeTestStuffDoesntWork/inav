@@ -44,13 +44,13 @@
 
 #include "cms/cms.h"
 
-#include "drivers/1-wire.h"
-#include "drivers/accgyro/accgyro.h"
+// #include "drivers/1-wire.h"
+// #include "drivers/accgyro/accgyro.h"
 #include "drivers/adc.h"
-#include "drivers/compass/compass.h"
-#include "drivers/bus.h"
+// #include "drivers/compass/compass.h"
+// #include "drivers/bus.h"
 #include "drivers/dma.h"
-#include "drivers/exti.h"
+// #include "drivers/exti.h"
 #include "drivers/io.h"
 #include "drivers/flash.h"
 #include "drivers/gimbal_common.h"
@@ -62,16 +62,16 @@
 #include "drivers/pwm_esc_detect.h"
 #include "drivers/pwm_mapping.h"
 #include "drivers/pwm_output.h"
-#include "drivers/sensor.h"
+// #include "drivers/sensor.h"
 #include "drivers/serial.h"
 #include "drivers/serial_softserial.h"
-#include "drivers/serial_uart.h"
+// #include "drivers/serial_uart.h"
 #include "drivers/serial_usb_vcp.h"
 #include "drivers/sound_beeper.h"
 #include "drivers/system.h"
 #include "drivers/time.h"
 #include "drivers/timer.h"
-#include "drivers/uart_inverter.h"
+// #include "drivers/uart_inverter.h"
 #include "drivers/io.h"
 #include "drivers/vtx_common.h"
 #ifdef USE_USB_MSC
@@ -135,15 +135,15 @@
 #include "rx/rx.h"
 #include "rx/spektrum.h"
 
-#include "sensors/acceleration.h"
-#include "sensors/barometer.h"
+// #include "sensors/acceleration.h"
+// #include "sensors/barometer.h"
 #include "sensors/battery.h"
 #include "sensors/boardalignment.h"
-#include "sensors/compass.h"
-#include "sensors/gyro.h"
+// #include "sensors/compass.h"
+// #include "sensors/gyro.h"
 #include "sensors/initialisation.h"
-#include "sensors/pitotmeter.h"
-#include "sensors/rangefinder.h"
+// #include "sensors/pitotmeter.h"
+// #include "sensors/rangefinder.h"
 #include "sensors/sensors.h"
 #include "sensors/esc_sensor.h"
 
@@ -200,67 +200,67 @@ void init(void)
 #endif
 
 #ifdef USE_HAL_DRIVER
-    HAL_Init();
+    // HAL_Init();
 #endif
 
-    systemState = SYSTEM_STATE_INITIALISING;
-    printfSupportInit();
+    // systemState = SYSTEM_STATE_INITIALISING;
+    // printfSupportInit();
 
     // Initialize system and CPU clocks to their initial values
-    systemInit();
+    // systemInit();
 
 #if !defined(SITL_BUILD)
-    __enable_irq();
+    // __enable_irq();
 #endif
 
     // initialize IO (needed for all IO operations)
-    IOInitGlobal();
+    // IOInitGlobal();
 
 #ifdef USE_HARDWARE_REVISION_DETECTION
-    detectHardwareRevision();
+    // detectHardwareRevision();
 #endif
 
 #ifdef USE_BRUSHED_ESC_AUTODETECT
-    detectBrushedESC();
+    // detectBrushedESC();
 #endif
 
 #ifdef CONFIG_IN_EXTERNAL_FLASH
     // Reset config to defaults. Note: Default flash config must be functional for config in external flash to work.
-    pgResetAll(0);
+    // pgResetAll(0);
 
-    flashDeviceInitialized = flashInit();
+    // flashDeviceInitialized = flashInit();
 #endif
 
 #if defined(SITL_BUILD)
     serialProxyInit();
 #endif
 
-    initEEPROM();
-    ensureEEPROMContainsValidData();
-    suspendRxSignal();
-    readEEPROM();
-    resumeRxSignal();
+    // initEEPROM();
+    // ensureEEPROMContainsValidData();
+    // suspendRxSignal();
+    // readEEPROM();
+    // resumeRxSignal();
 
 #ifdef USE_I2C
-    i2cSetSpeed(systemConfig()->i2c_speed);
+    // i2cSetSpeed(systemConfig()->i2c_speed);
 #endif
 
 #ifdef USE_HARDWARE_PREBOOT_SETUP
-    initialisePreBootHardware();
+    // initialisePreBootHardware();
 #endif
 
-    systemState |= SYSTEM_STATE_CONFIG_LOADED;
+    // systemState |= SYSTEM_STATE_CONFIG_LOADED;
 
-    debugMode = systemConfig()->debug_mode;
+    // debugMode = systemConfig()->debug_mode;
 
     // Latch active features to be used for feature() in the remainder of init().
-    latchActiveFeatures();
+    // latchActiveFeatures();
 
-    ledInit(false);
+    // ledInit(false);
 #if !defined(SITL_BUILD)
-    EXTIInit();
+    // EXTIInit();
 #endif
-
+/*
 #if defined(USE_SPEKTRUM_BIND) && defined(USE_SERIALRX_SPEKTRUM)
     if (rxConfig()->receiverType == RX_TYPE_SERIAL) {
         switch (rxConfig()->serialrx_provider) {
@@ -274,73 +274,75 @@ void init(void)
         }
     }
 #endif
-
+*/
 #ifdef USE_VCP
+    #warning "Using VCP"
     // Early initialize USB hardware
     usbVcpInitHardware();
 #endif
 
-    timerInit();  // timer must be initialized before any channel is allocated
+    // timerInit();  // timer must be initialized before any channel is allocated
 
-    serialInit(feature(FEATURE_SOFTSERIAL));
+    // serialInit(feature(FEATURE_SOFTSERIAL));
 
     // Initialize MSP serial ports here so LOG can share a port with MSP.
     // XXX: Don't call mspFcInit() yet, since it initializes the boxes and needs
     // to run after the sensors have been detected.
-    mspSerialInit();
+    // mspSerialInit();
 
 #if defined(USE_DJI_HD_OSD)
     // DJI OSD uses a special flavour of MSP (subset of Betaflight 4.1.1 MSP) - process as part of serial task
-    djiOsdSerialInit();
+    // djiOsdSerialInit();
 #endif
 
 #if defined(USE_SMARTPORT_MASTER)
-    smartportMasterInit();
+    // smartportMasterInit();
 #endif
 
 #if defined(USE_LOG)
     // LOG might use serial output, so we only can init it after serial port is ready
     // From this point on we can use LOG_*() to produce real-time debugging information
-    logInit();
+    // logInit();
 #endif
 
 #ifdef USE_PROGRAMMING_FRAMEWORK
-    gvInit();
+    // gvInit();
 #endif
 
     // Initialize servo and motor mixers
     // This needs to be called early to set up platform type correctly and count required motors & servos
-    mixerConfigInit();
+    // mixerConfigInit();
 
     // Some sanity checking
-    if (motorConfig()->motorPwmProtocol == PWM_TYPE_BRUSHED) {
+    /*if (motorConfig()->motorPwmProtocol == PWM_TYPE_BRUSHED) {
         featureClear(FEATURE_REVERSIBLE_MOTORS);
     }
     if (!STATE(ALTITUDE_CONTROL)) {
         featureClear(FEATURE_AIRMODE);
     }
+    */
 #if !defined(SITL_BUILD)
     // Initialize motor and servo outpus
-    if (pwmMotorAndServoInit()) {
+    /*if (pwmMotorAndServoInit()) {
         DISABLE_ARMING_FLAG(ARMING_DISABLED_PWM_OUTPUT_ERROR);
     }
     else {
         ENABLE_ARMING_FLAG(ARMING_DISABLED_PWM_OUTPUT_ERROR);
-    }
+    }*/
 #else
     DISABLE_ARMING_FLAG(ARMING_DISABLED_PWM_OUTPUT_ERROR);
 #endif
-    systemState |= SYSTEM_STATE_MOTORS_READY;
+    // systemState |= SYSTEM_STATE_MOTORS_READY;
 
 #ifdef USE_ESC_SENSOR
     // DSHOT supports a dedicated wire ESC telemetry. Kick off the ESC-sensor receiver initialization
     // We may, however, do listen_only, so need to init this anyway
     // Initialize escSensor after having done it with outputs
-    escSensorInitialize();
+    // escSensorInitialize();
 #endif
 
 #ifdef BEEPER
-    beeperDevConfig_t beeperDevConfig = {
+    /*beeperDevConfig_t beeperDevConfig = {
         .ioTag = IO_TAG(BEEPER),
 #ifdef BEEPER_INVERTED
         .isOD = false,
@@ -352,29 +354,30 @@ void init(void)
     };
 
     beeperInit(&beeperDevConfig);
+    */
 #endif
 #ifdef USE_LIGHTS
-    lightsInit();
+    // lightsInit();
 #endif
 
 #ifdef USE_UART_INVERTER
-    uartInverterInit();
+    // uartInverterInit();
 #endif
 
     // Initialize buses
-    busInit();
+    // busInit();
 
 #ifdef CONFIG_IN_EXTERNAL_FLASH
     // busInit re-configures the SPI pins. Init flash again so it is ready to write settings
-    flashDeviceInitialized = flashInit();
+    // flashDeviceInitialized = flashInit();
 #endif
 
 #ifdef USE_HARDWARE_REVISION_DETECTION
-    updateHardwareRevision();
+    // updateHardwareRevision();
 #endif
 
 #if defined(USE_SDCARD_SDIO) && (defined(STM32H7) || defined(STM32F7))
-    sdioPinConfigure();
+    // sdioPinConfigure();
 #endif
 
 #ifdef USE_USB_MSC
@@ -406,16 +409,18 @@ void init(void)
 
 #ifdef USE_I2C
 #ifdef USE_I2C_DEVICE_1
-    #ifdef I2C_DEVICE_1_SHARES_UART3
+    /*#ifdef I2C_DEVICE_1_SHARES_UART3
         if (!doesConfigurationUsePort(SERIAL_PORT_USART3)) {
             i2cInit(I2CDEV_1);
         }
     #else
             i2cInit(I2CDEV_1);
     #endif
+    */
 #endif
 
 #ifdef USE_I2C_DEVICE_2
+    /*
     #ifdef I2C_DEVICE_2_SHARES_UART3
         if (!doesConfigurationUsePort(SERIAL_PORT_USART3)) {
             i2cInit(I2CDEV_2);
@@ -423,17 +428,19 @@ void init(void)
     #else
             i2cInit(I2CDEV_2);
     #endif
+    */
 #endif
 
 #ifdef USE_I2C_DEVICE_3
-    i2cInit(I2CDEV_3);
+    // i2cInit(I2CDEV_3);
 #endif
 
 #ifdef USE_I2C_DEVICE_4
-    i2cInit(I2CDEV_4);
+    // i2cInit(I2CDEV_4);
 #endif
 
 #ifdef USE_I2C_DEVICE_EMULATED
+    /*
     #ifdef I2C_DEVICE_EMULATED_SHARES_UART3
         if (!doesConfigurationUsePort(SERIAL_PORT_USART3)) {
             i2cInit(I2CDEV_EMULATED);
@@ -441,10 +448,12 @@ void init(void)
     #else
             i2cInit(I2CDEV_EMULATED);
     #endif
+    */
 #endif
 #endif
 
 #ifdef USE_ADC
+    /*
     drv_adc_config_t adc_params;
     memset(&adc_params, 0, sizeof(adc_params));
 
@@ -460,29 +469,29 @@ void init(void)
     if (feature(FEATURE_CURRENT_METER) && batteryMetersConfig()->current.type == CURRENT_SENSOR_ADC) {
         adc_params.adcFunctionChannel[ADC_CURRENT] =  adcChannelConfig()->adcFunctionChannel[ADC_CURRENT];
     }
-
+    */
 #if defined(USE_PITOT) && defined(USE_ADC) && defined(USE_PITOT_ADC)
-    if (pitotmeterConfig()->pitot_hardware == PITOT_ADC || pitotmeterConfig()->pitot_hardware == PITOT_AUTODETECT) {
+    /* if (pitotmeterConfig()->pitot_hardware == PITOT_ADC || pitotmeterConfig()->pitot_hardware == PITOT_AUTODETECT) {
         adc_params.adcFunctionChannel[ADC_AIRSPEED] = adcChannelConfig()->adcFunctionChannel[ADC_AIRSPEED];
-    }
+    } */
 #endif
 
-    adcInit(&adc_params);
+    // adcInit(&adc_params);
 #endif
 
 #ifdef USE_PINIO
-    pinioInit();
+    // pinioInit();
 #endif
 
 #ifdef USE_PINIOBOX
-    pinioBoxInit();
+    // pinioBoxInit();
 #endif
 
 #if defined(USE_GPS) || defined(USE_MAG)
-    delay(500);
+    // delay(500);
 
     /* Extra 500ms delay prior to initialising hardware if board is cold-booting */
-    if (!isMPUSoftReset()) {
+    /*if (!isMPUSoftReset()) {
         LED1_ON;
         LED0_OFF;
 
@@ -495,126 +504,127 @@ void init(void)
         LED0_OFF;
         LED1_OFF;
     }
+    */
 #endif
 
-    initBoardAlignment();
+    // initBoardAlignment();
 
 #ifdef USE_CMS
-    cmsInit();
+    // cmsInit();
 #endif
 
 #ifdef USE_DASHBOARD
     if (feature(FEATURE_DASHBOARD)) {
-        dashboardInit();
+        // dashboardInit();
     }
 #endif
 
 #ifdef USE_GPS
     if (feature(FEATURE_GPS)) {
-        gpsPreInit();
+        // gpsPreInit();
     }
 #endif
 
     // 1-Wire IF chip
 #ifdef USE_1WIRE
-    owInit();
+    // owInit();
 #endif
 
 #ifdef USE_EZ_TUNE
-    ezTuneUpdate();
+    // ezTuneUpdate();
 #endif
 
 #ifndef USE_GEOZONE
-    featureClear(FEATURE_GEOZONE);
+    // featureClear(FEATURE_GEOZONE);
 #endif
 
-    if (!sensorsAutodetect()) {
+    /*if (!sensorsAutodetect()) {
         // if gyro was not detected due to whatever reason, we give up now.
         failureMode(FAILURE_MISSING_ACC);
-    }
+    }*/
 
     systemState |= SYSTEM_STATE_SENSORS_READY;
 
-    flashLedsAndBeep();
+    // flashLedsAndBeep();
 
-    pidInitFilters();
+    // pidInitFilters();
 
-    imuInit();
+    // imuInit();
 
     // Sensors have now been detected, mspFcInit() can now be called
     // to set the boxes up
-    mspFcInit();
+    // mspFcInit();
 
     cliInit(serialConfig());
 
-    failsafeInit();
+    // failsafeInit();
 
-    rxInit();
+    // rxInit();
 
 #if defined(USE_OSD)
-    displayPort_t *osdDisplayPort = NULL;
+    // displayPort_t *osdDisplayPort = NULL;
 #endif
 
 #ifdef USE_OSD
     if (feature(FEATURE_OSD)) {
 #if defined(USE_FRSKYOSD)
-        if (!osdDisplayPort) {
+        /*if (!osdDisplayPort) {
             osdDisplayPort = frskyOSDDisplayPortInit(osdConfig()->video_system);
-        }
+        }*/
 #endif
 #ifdef USE_MSP_OSD
-        if (!osdDisplayPort) {
+        /* if (!osdDisplayPort) {
             osdDisplayPort = mspOsdDisplayPortInit(osdConfig()->video_system);
-        }
+        } */
 #endif
 #if defined(USE_MAX7456)
         // If there is a max7456 chip for the OSD and we have no
         // external OSD initialized, use it.
-        if (!osdDisplayPort) {
+        /*if (!osdDisplayPort) {
             osdDisplayPort = max7456DisplayPortInit(osdConfig()->video_system);
-        }
+        }*/
 #elif defined(USE_OSD_OVER_MSP_DISPLAYPORT) // OSD over MSP; not supported (yet)
-        if (!osdDisplayPort) {
+        /* if (!osdDisplayPort) {
             osdDisplayPort = displayPortMspInit();
-        }
+        }*/
 #endif
         // osdInit  will register with CMS by itself.
-        osdInit(osdDisplayPort);
+        // osdInit(osdDisplayPort);
     }
 #endif
 
 #if defined(USE_CMS) && defined(USE_SPEKTRUM_CMS_TELEMETRY) && defined(USE_TELEMETRY_SRXL)
     // Register the srxl Textgen telemetry sensor as a displayport device
-    cmsDisplayPortRegister(displayPortSrxlInit());
+    // cmsDisplayPortRegister(displayPortSrxlInit());
 #endif
 
 #ifdef USE_GPS
     if (feature(FEATURE_GPS)) {
-        gpsInit();
+        // gpsInit();
     }
 #endif
 
 
-    navigationInit();
+    // navigationInit();
 
 #ifdef USE_LED_STRIP
-    ledStripInit();
+    // ledStripInit();
 
     if (feature(FEATURE_LED_STRIP)) {
-        ledStripEnable();
+        // ledStripEnable();
     }
 #endif
 
 #ifdef USE_TELEMETRY
     if (feature(FEATURE_TELEMETRY)) {
-        telemetryInit();
+        // telemetryInit();
     }
 #endif
 
 #ifdef USE_BLACKBOX
 
     //Do not allow blackbox to be run faster that 1kHz. It can cause UAV to drop dead when digital ESC protocol is used
-    const uint32_t blackboxLooptime =  getLooptime() * blackboxConfig()->rate_denom / blackboxConfig()->rate_num;
+    /* const uint32_t blackboxLooptime =  getLooptime() * blackboxConfig()->rate_denom / blackboxConfig()->rate_num;
 
     if (blackboxLooptime < 1000) {
         blackboxConfigMutable()->rate_num = 1;
@@ -648,38 +658,39 @@ void init(void)
     }
 
     blackboxInit();
+    */
 #endif
 
-    gyroStartCalibration();
+    // gyroStartCalibration();
 
 #ifdef USE_BARO
-    baroStartCalibration();
+    // baroStartCalibration();
 #endif
 
 #ifdef USE_PITOT
-    pitotStartCalibration();
+    // pitotStartCalibration();
 #endif
 
 #if defined(USE_VTX_CONTROL)
-    vtxControlInit();
-    vtxCommonInit();
-    vtxInit();
+    // vtxControlInit();
+    // vtxCommonInit();
+    // vtxInit();
 
 #ifdef USE_VTX_SMARTAUDIO
-    vtxSmartAudioInit();
+    // vtxSmartAudioInit();
 #endif
 
 #ifdef USE_VTX_TRAMP
-    vtxTrampInit();
+    // vtxTrampInit();
 #endif
 
 #ifdef USE_VTX_FFPV
-    vtxFuriousFPVInit();
+    // vtxFuriousFPVInit();
 #endif
 
 #ifdef USE_VTX_MSP
     if (feature(FEATURE_OSD)) {
-       vtxMspInit();
+       // vtxMspInit();
     }
 #endif
 
@@ -687,64 +698,64 @@ void init(void)
 
     // Now that everything has powered up the voltage and cell count be determined.
     if (feature(FEATURE_VBAT | FEATURE_CURRENT_METER))
-        batteryInit();
+        // batteryInit();
 
 #ifdef USE_RCDEVICE
-    rcdeviceInit();
+    // rcdeviceInit();
 #endif // USE_RCDEVICE
 
 #ifdef USE_DSHOT
-    initDShotCommands();
+    // initDShotCommands();
 #endif
 
 #ifdef USE_SERIAL_GIMBAL
-    gimbalCommonInit();
+    // gimbalCommonInit();
     // Needs to be called before gimbalSerialHeadTrackerInit
-    gimbalSerialInit();
+    // gimbalSerialInit();
 #endif
 
 #ifdef USE_HEADTRACKER
-    headTrackerCommonInit();
+    // headTrackerCommonInit();
 #ifdef USE_HEADTRACKER_SERIAL
     // Needs to be called after gimbalSerialInit
-    gimbalSerialHeadTrackerInit();
+    // gimbalSerialHeadTrackerInit();
 #endif
 #ifdef USE_HEADTRACKER_MSP
-    mspHeadTrackerInit();
+    // mspHeadTrackerInit();
 #endif
 #endif
 
     // Latch active features AGAIN since some may be modified by init().
-    latchActiveFeatures();
-    motorControlEnable = true;
+    // latchActiveFeatures();
+    // motorControlEnable = true;
 
     fcTasksInit();
 
 #ifdef USE_OSD
-    if (feature(FEATURE_OSD) && (osdDisplayPort != NULL)) {
+    /*if (feature(FEATURE_OSD) && (osdDisplayPort != NULL)) {
         setTaskEnabled(TASK_OSD, feature(FEATURE_OSD));
-    }
+    }*/
 #endif
 
 #ifdef USE_RPM_FILTER
-    disableRpmFilters();
+    /* disableRpmFilters();
     if (STATE(ESC_SENSOR_ENABLED) && (rpmFilterConfig()->gyro_filter_enabled || rpmFilterConfig()->dterm_filter_enabled)) {
         rpmFiltersInit();
         setTaskEnabled(TASK_RPM_FILTER, true);
-    }
+    } */
 #endif
 
 #ifdef USE_I2C_IO_EXPANDER
-    ioPortExpanderInit();
+    // ioPortExpanderInit();
 #endif
 
 #ifdef USE_POWER_LIMITS
-    powerLimiterInit();
+    // powerLimiterInit();
 #endif
 
 #if !defined(SITL_BUILD)
     // Considering that the persistent reset reason is only used during init
-    persistentObjectWrite(PERSISTENT_OBJECT_RESET_REASON, RESET_NONE);
+    // persistentObjectWrite(PERSISTENT_OBJECT_RESET_REASON, RESET_NONE);
 #endif
 
     statsInit();

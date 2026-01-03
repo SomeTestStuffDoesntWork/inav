@@ -19,6 +19,10 @@
 
 #if defined(AT32F43x)
     #define NVIC_PRIORITY_GROUPING NVIC_PRIORITY_GROUP_4
+#elif defined(MIMXRT_106X)
+    #include "core_cm7.h"
+    // MIMXRT 106X defaults to four priority bites (0x3) unless otherwise set via preprocessor.
+    #define NVIC_PRIORITY_GROUPING _NVIC_PRIO_BITS
 #else //STM32
     // Use all available bits for priority and zero bits to sub-priority
     #ifdef USE_HAL_DRIVER

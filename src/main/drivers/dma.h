@@ -56,6 +56,29 @@ typedef void (*dmaCallbackHandlerFuncPtr)(DMA_t channelDescriptor);
         dmamux_channel_type	     * dmaMuxref;  //dmamux flag  
     } dmaChannelDescriptor_t;
 
+#elif defined(MIMXRT_106X)
+
+    #warning "DMA Not yet implemented for MIMXRT1062, DO NOT USE YET"
+
+    typedef uint32_t DMA_TypeDef;
+
+    #define DMA_IT_TCIF                         ((uint32_t)0x00000020)
+    #define DMA_IT_HTIF                         ((uint32_t)0x00000010)
+    #define DMA_IT_TEIF                         ((uint32_t)0x00000008)
+    #define DMA_IT_DMEIF                        ((uint32_t)0x00000004)
+    #define DMA_IT_FEIF                         ((uint32_t)0x00000001)
+
+    typedef struct dmaChannelDescriptor_s {
+        dmaTag_t                    tag;
+        DMA_TypeDef*                dma;
+        dmaCallbackHandlerFuncPtr   irqHandlerCallback;
+        uint32_t                    flagsShift;
+        IRQn_Type                   irqNumber;
+        uint32_t                    userParam;
+        resourceOwner_e             owner;
+        uint8_t                     resourceIndex;
+    } dmaChannelDescriptor_t;
+
 #else
     #define DMA_IT_TCIF                         ((uint32_t)0x00000020)
     #define DMA_IT_HTIF                         ((uint32_t)0x00000010)

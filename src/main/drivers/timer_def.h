@@ -108,6 +108,8 @@
 #elif defined(AT32F43x)
     #include "timer_def_at32f43x.h"
 #elif defined(SITL_BUILD)
+#elif defined(MIMXRT_106X)
+#warning "Timer Definitions not yet implemented for MIMXRT106X"
 #else
     #error "Unknown CPU defined"
 #endif

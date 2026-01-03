@@ -15,12 +15,13 @@
  * along with INAV.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* #include <stdbool.h>
+#include <stdbool.h>
 #include <platform.h>
 #include "drivers/io.h"
 #include "drivers/pwm_mapping.h"
 #include "drivers/timer.h"
 
+/*
 timerHardware_t timerHardware[] = {
     DEF_TIM(TIM4,   CH2, PB7,  TIM_USE_OUTPUT_AUTO,   1, 0), // S1 D(1,3,2)
     DEF_TIM(TIM4,   CH1, PB6,  TIM_USE_OUTPUT_AUTO,   1, 0), // S2 D(1,0,2)
