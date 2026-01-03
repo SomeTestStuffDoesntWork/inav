@@ -280,7 +280,7 @@ bool isSerialConfigValid(const serialConfig_t *serialConfigToCheck)
      */
     uint8_t mspPortCount = 0;
 
-    for (int index = 0; index < SERIAL_PORT_COUNT; index++) {
+    /*for (int index = 0; index < SERIAL_PORT_COUNT; index++) {
         const serialPortConfig_t *portConfig = &serialConfigToCheck->portConfigs[index];
 
         if (portConfig->functionMask & FUNCTION_MSP) {
@@ -309,7 +309,7 @@ bool isSerialConfigValid(const serialConfig_t *serialConfigToCheck)
 
     if (mspPortCount == 0 || mspPortCount > MAX_MSP_PORT_COUNT) {
         return false;
-    }
+    }*/
     return true;
 }
 

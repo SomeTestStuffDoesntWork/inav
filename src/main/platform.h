@@ -79,8 +79,7 @@ typedef enum
 #define U_ID_2 (*(uint32_t*)0x1fff7a18)
 
 #elif defined(MIMXRT_106X)
-
-#include "MIMXRT1062.h"
+#include "system_mimxrt106x.h"
 #include "mimxrt106x_utils.h"
 
 // Unique IDs for the MIMXRT 106x devices

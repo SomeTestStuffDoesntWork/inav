@@ -29,7 +29,7 @@
 #include "drivers/system.h"
 #include "drivers/time.h"
 
-#if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)||defined(AT32F43x)
+#if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)||defined(AT32F43x) || defined(MIMXRT_106X)
 // See "RM CoreSight Architecture Specification"
 // B2.3.10  "LSR and LAR, Software Lock Status Register and Software Lock Access Register"
 // "E1.2.11  LAR, Lock Access Register"
@@ -43,7 +43,7 @@ void cycleCounterInit(void)
 {
     extern uint32_t usTicks; // From drivers/time.h
 
-    #if defined(AT32F43x)
+    #if defined(AT32F43x) || defined(MIMXRT_106X)
         //crm_clocks_freq_type clocks;
         //crm_clocks_freq_get(&clocks); 
         //usTicks = clocks.sclk_freq / 1000000;
@@ -62,7 +62,7 @@ void cycleCounterInit(void)
     // Enable DWT for precision time measurement
     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
 
-    #if defined(STM32F7) || defined(STM32H7)
+    #if defined(STM32F7) || defined(STM32H7) || defined(MIMXRT_106X)
         DWT->LAR = DWT_LAR_UNLOCK_VALUE;
     #elif defined(AT32F43x)
       ITM->LAR = DWT_LAR_UNLOCK_VALUE;
@@ -95,7 +95,7 @@ void systemReset(void)
 
 void systemResetRequest(uint32_t requestId)
 {
-    persistentObjectWrite(PERSISTENT_OBJECT_RESET_REASON, requestId);
+    // persistentObjectWrite(PERSISTENT_OBJECT_RESET_REASON, requestId);
     systemReset();
 }
 
@@ -114,12 +114,12 @@ typedef struct isrVector_s {
 
 void checkForBootLoaderRequest(void)
 {
-    uint32_t bootloaderRequest = persistentObjectRead(PERSISTENT_OBJECT_RESET_REASON);
+    uint32_t bootloaderRequest = 0; // persistentObjectRead(PERSISTENT_OBJECT_RESET_REASON);
 
     if (bootloaderRequest != RESET_BOOTLOADER_REQUEST_ROM) {
         return;
     }
-    persistentObjectWrite(PERSISTENT_OBJECT_RESET_REASON, RESET_NONE);
+    // persistentObjectWrite(PERSISTENT_OBJECT_RESET_REASON, RESET_NONE);
 
     volatile isrVector_t *bootloaderVector = (isrVector_t *)systemBootloaderAddress();
     __set_MSP(bootloaderVector->stackEnd);

@@ -16,6 +16,11 @@
  */
 
 #pragma once
-#include <stdint.h>
 
-uint32_t getDeviceUid(uint8_t device_id_word);
+// This file is a switch for the various MIMXRT_106X configurations.
+#if defined(MIMXRT_1062)
+    #include "MIMXRT1062.h"
+#elif defined(MIMXRT_106X)
+#error MIMXRT_106X defined but no chip was selected.
+#endif
+

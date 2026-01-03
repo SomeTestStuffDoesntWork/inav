@@ -247,25 +247,29 @@ status_t BOARD_Touch_I2C_Receive(
 /* MPU configuration. */
 void BOARD_ConfigMPU(void)
 {
+
+    // NOTE: MODIFIED FOR INAV - This configuration was based on a SDK for an evaluation board with
+    // a different memory map. MCUxpresso does not allow for this region to be completely removed through
+    // its automated configuration tools, so manual edits had to be added to remmove it.
 #if defined(__CC_ARM) || defined(__ARMCC_VERSION)
-    extern uint32_t Image$$RW_m_ncache$$Base[];
-    /* RW_m_ncache_unused is a auxiliary region which is used to get the whole size of noncache section */
-    extern uint32_t Image$$RW_m_ncache_unused$$Base[];
-    extern uint32_t Image$$RW_m_ncache_unused$$ZI$$Limit[];
-    uint32_t nonCacheStart = (uint32_t)Image$$RW_m_ncache$$Base;
-    uint32_t size          = ((uint32_t)Image$$RW_m_ncache_unused$$Base == nonCacheStart) ?
-                                 0 :
-                                 ((uint32_t)Image$$RW_m_ncache_unused$$ZI$$Limit - nonCacheStart);
+    // extern uint32_t Image$$RW_m_ncache$$Base[];
+    // /* RW_m_ncache_unused is a auxiliary region which is used to get the whole size of noncache section */
+    // extern uint32_t Image$$RW_m_ncache_unused$$Base[];
+    // extern uint32_t Image$$RW_m_ncache_unused$$ZI$$Limit[];
+    // uint32_t nonCacheStart = (uint32_t)Image$$RW_m_ncache$$Base;
+    // uint32_t size          = ((uint32_t)Image$$RW_m_ncache_unused$$Base == nonCacheStart) ?
+    //                              0 :
+    //                              ((uint32_t)Image$$RW_m_ncache_unused$$ZI$$Limit - nonCacheStart);
 #elif defined(__MCUXPRESSO)
-    extern uint32_t __base_NCACHE_REGION;
-    extern uint32_t __top_NCACHE_REGION;
-    uint32_t nonCacheStart = (uint32_t)(&__base_NCACHE_REGION);
-    uint32_t size          = (uint32_t)(&__top_NCACHE_REGION) - nonCacheStart;
+    // extern uint32_t __base_NCACHE_REGION;
+    // extern uint32_t __top_NCACHE_REGION;
+    // uint32_t nonCacheStart = (uint32_t)(&__base_NCACHE_REGION);
+    // uint32_t size          = (uint32_t)(&__top_NCACHE_REGION) - nonCacheStart;
 #elif defined(__ICCARM__) || defined(__GNUC__)
-    extern uint32_t __NCACHE_REGION_START[];
-    extern uint32_t __NCACHE_REGION_SIZE[];
-    uint32_t nonCacheStart = (uint32_t)__NCACHE_REGION_START;
-    uint32_t size          = (uint32_t)__NCACHE_REGION_SIZE;
+    // extern uint32_t __NCACHE_REGION_START[];
+    // extern uint32_t __NCACHE_REGION_SIZE[];
+    // uint32_t nonCacheStart = (uint32_t)__NCACHE_REGION_START;
+    // uint32_t size          = (uint32_t)__NCACHE_REGION_SIZE;
 #endif
     volatile uint32_t i = 0;
 
@@ -378,22 +382,25 @@ void BOARD_ConfigMPU(void)
     MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 0, 0, 1, 1, 0, ARM_MPU_REGION_SIZE_32MB);
 #endif
 
-    while ((size >> i) > 0x1U)
-    {
-        i++;
-    }
+    // NOTE: MODIFIED FOR INAV - This configuration was based on a SDK for an evaluation board with
+    // a different memory map. MCUxpresso does not allow for this region to be completely removed through
+    // its automated configuration tools, so manual edits had to be added to remmove it.
+    // while ((size >> i) > 0x1U)
+    // {
+    //     i++;
+    // }
 
-    if (i != 0)
-    {
-        /* The MPU region size should be 2^N, 5<=N<=32, region base should be multiples of size. */
-        assert(!(nonCacheStart % size));
-        assert(size == (uint32_t)(1 << i));
-        assert(i >= 5);
+    // if (i != 0)
+    // {
+    //     /* The MPU region size should be 2^N, 5<=N<=32, region base should be multiples of size. */
+    //     assert(!(nonCacheStart % size));
+    //     assert(size == (uint32_t)(1 << i));
+    //     assert(i >= 5);
 
-        /* Region 10 setting: Memory with Normal type, not shareable, non-cacheable */
-        MPU->RBAR = ARM_MPU_RBAR(10, nonCacheStart);
-        MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 1, 0, 0, 0, 0, i - 1);
-    }
+    //     /* Region 10 setting: Memory with Normal type, not shareable, non-cacheable */
+    //     MPU->RBAR = ARM_MPU_RBAR(10, nonCacheStart);
+    //     MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 1, 0, 0, 0, 0, i - 1);
+    // }
 
     /* Region 10 setting: Memory with Device type, not shareable, non-cacheable */
     MPU->RBAR = ARM_MPU_RBAR(11, 0x40000000);

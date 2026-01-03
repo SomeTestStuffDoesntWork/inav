@@ -52,12 +52,12 @@ void * memAllocate(size_t wantedSize, resourceOwner_e owner)
         retPointer = &dynHeap[dynHeapFreeWord];
         dynHeapFreeWord += wantedWords;
         dynHeapUsage[owner] += wantedWords * sizeof(uint32_t);
-        LOG_DEBUG(SYSTEM, "Memory allocated. Free memory = %ld", (unsigned long)memGetAvailableBytes());
+        // LOG_DEBUG(SYSTEM, "Memory allocated. Free memory = %ld", (unsigned long)memGetAvailableBytes());
     }
     else {
         // OOM
-        LOG_ERROR(SYSTEM, "Out of memory");
-        ENABLE_ARMING_FLAG(ARMING_DISABLED_OOM);
+        // LOG_ERROR(SYSTEM, "Out of memory");
+        // ENABLE_ARMING_FLAG(ARMING_DISABLED_OOM);
     }
 
     return retPointer;

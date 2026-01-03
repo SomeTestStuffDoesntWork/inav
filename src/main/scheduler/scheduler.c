@@ -32,6 +32,9 @@
 
 #include "drivers/time.h"
 
+#warning "Remove Debug Util include!"
+#include "DbgUtil.h"
+
 STATIC_FASTRAM cfTask_t *currentTask = NULL;
 
 STATIC_FASTRAM uint32_t totalWaitingTasks;
@@ -207,6 +210,10 @@ void schedulerInit(void)
 
 void FAST_CODE NOINLINE scheduler(void)
 {
+    // Notify that we are alive here.
+    PRINTF("Performing scheduler operations\n\r");
+    delayMicroseconds(500000);
+
     // Cache currentTime
     const timeUs_t currentTimeUs = micros();
 
@@ -217,11 +224,15 @@ void FAST_CODE NOINLINE scheduler(void)
 
     // Update task dynamic priorities
     uint16_t waitingTasks = 0;
+
     for (cfTask_t *task = queueFirst(); task != NULL; task = queueNext()) {
+        // PRINTF("Checking for available tasks... Current task check is for %s\n\r", task->taskName);
+        // delayMicroseconds(500000);
         // Task has checkFunc - event driven
         if (task->checkFunc) {
+            PRINTF("Task has check function\n\r");
+            delayMicroseconds(500000);
             const timeUs_t currentTimeBeforeCheckFuncCallUs = micros();
-
             // Increase priority for event driven tasks
             if (task->dynamicPriority > 0) {
                 task->taskAgeCycles = 1 + ((timeDelta_t)(currentTimeUs - task->lastSignaledAt)) / task->desiredPeriod;
@@ -241,6 +252,8 @@ void FAST_CODE NOINLINE scheduler(void)
                 task->taskAgeCycles = 0;
             }
         } else if (task->staticPriority == TASK_PRIORITY_REALTIME) {
+            PRINTF("Task has realtime priority\n\r");
+            delayMicroseconds(500000);
             //realtime tasks take absolute priority. Any RT tasks that is overdue, should be execute immediately
             if (((timeDelta_t)(currentTimeUs - task->lastExecutedAt)) > task->desiredPeriod) {
                 selectedTaskDynamicPriority = task->dynamicPriority;
@@ -249,6 +262,8 @@ void FAST_CODE NOINLINE scheduler(void)
                 forcedRealTimeTask = true;
             }
         } else {
+            PRINTF("Task has dynamic priority\n\r");
+            delayMicroseconds(500000);
             // Task is time-driven, dynamicPriority is last execution age (measured in desiredPeriods)
             // Task age is calculated from last execution
             task->taskAgeCycles = ((timeDelta_t)(currentTimeUs - task->lastExecutedAt)) / task->desiredPeriod;
@@ -268,8 +283,10 @@ void FAST_CODE NOINLINE scheduler(void)
     totalWaitingTasks += waitingTasks;
 
     currentTask = selectedTask;
-
     if (selectedTask) {
+        // PRINTF("Found a task to run. Task is %s\r\n", selectedTask->taskName);
+        PRINTF("Found a task to run.\n\r");
+        delayMicroseconds(500000);
         // Found a task that should be run
         selectedTask->taskLatestDeltaTime = (timeDelta_t)(currentTimeUs - selectedTask->lastExecutedAt);
         selectedTask->lastExecutedAt = currentTimeUs;
@@ -282,12 +299,15 @@ void FAST_CODE NOINLINE scheduler(void)
         selectedTask->movingSumExecutionTime += taskExecutionTime - selectedTask->movingSumExecutionTime / TASK_MOVING_SUM_COUNT;
         selectedTask->totalExecutionTime += taskExecutionTime;   // time consumed by scheduler + task
         selectedTask->maxExecutionTime = MAX(selectedTask->maxExecutionTime, taskExecutionTime);
-    } 
+    }
     
     if (!selectedTask || forcedRealTimeTask) {
+        // PRINTF("Did not select a task. Running critical/system task instead. %s\r\n", selectedTask->taskName);
+        PRINTF("Did not find a task to run.\n\r");
+        delayMicroseconds(500000);
         // Execute system real-time callbacks and account for them to SYSTEM account
         const timeUs_t currentTimeBeforeTaskCall = micros();
-        taskRunRealtimeCallbacks(currentTimeBeforeTaskCall);
+        // taskRunRealtimeCallbacks(currentTimeBeforeTaskCall);
         selectedTask = &cfTasks[TASK_SYSTEM];
         const timeUs_t taskExecutionTime = micros() - currentTimeBeforeTaskCall;
         selectedTask->movingSumExecutionTime += taskExecutionTime - selectedTask->movingSumExecutionTime / TASK_MOVING_SUM_COUNT;

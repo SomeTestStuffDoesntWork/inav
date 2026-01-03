@@ -1290,7 +1290,7 @@ static void cliRxRange(char *cmdline)
 #ifdef USE_TEMPERATURE_SENSOR
 static void printTempSensor(uint8_t dumpMask, const tempSensorConfig_t *tempSensorConfigs, const tempSensorConfig_t *defaultTempSensorConfigs)
 {
-    const char *format = "temp_sensor %u %u %s %d %d %u %s";
+    /*const char *format = "temp_sensor %u %u %s %d %d %u %s";
     for (uint8_t i = 0; i < MAX_TEMP_SENSORS; i++) {
         bool equalsDefault = false;
         char label[5], hex_address[17];
@@ -1323,7 +1323,7 @@ static void printTempSensor(uint8_t dumpMask, const tempSensorConfig_t *tempSens
             tempSensorConfigs[i].osdSymbol,
             label
         );
-    }
+    }*/
 }
 
 static void cliTempSensor(char *cmdline)
@@ -1384,7 +1384,7 @@ static void cliTempSensor(char *cmdline)
             } else if (type < 0 || type > TEMP_SENSOR_DS18B20 || alarm_min < -550 || alarm_min > 1250 || alarm_max < -550 || alarm_max > 1250 || osdSymbol < 0 || osdSymbol > TEMP_SENSOR_SYM_COUNT || strlen(label) > TEMPERATURE_LABEL_LEN || !addressValid) {
                 cliShowParseError();
             } else {
-                tempSensorConfig_t *sensorConfig = tempSensorConfigMutable(i);
+                /*tempSensorConfig_t *sensorConfig = tempSensorConfigMutable(i);
                 sensorConfig->type = type;
                 sensorConfig->address = address;
                 sensorConfig->alarm_min = alarm_min;
@@ -1393,7 +1393,7 @@ static void cliTempSensor(char *cmdline)
                 for (uint8_t index = 0; index < TEMPERATURE_LABEL_LEN; ++index) {
                     sensorConfig->label[index] = toupper(label[index]);
                     if (label[index] == '\0') break;
-                }
+                }*/
             }
         } else {
             cliShowArgumentRangeError("sensor index", 0, MAX_TEMP_SENSORS - 1);
@@ -3211,11 +3211,11 @@ static void cliTimerOutputMode(char *cmdline)
             // No args, or just timer. If any of them not provided,
             // it will be the -1 that we used during initialization, so printOsdLayout()
             // won't use them for filtering.
-            printTimerOutputModes(DUMP_MASTER, timerOverrides(0), NULL, timer);
+            // printTimerOutputModes(DUMP_MASTER, timerOverrides(0), NULL, timer);
             break;
         case 2:
-            timerOverridesMutable(timer)->outputMode = mode;
-            printTimerOutputModes(DUMP_MASTER, timerOverrides(0), NULL, timer);
+            // timerOverridesMutable(timer)->outputMode = mode;
+            // printTimerOutputModes(DUMP_MASTER, timerOverrides(0), NULL, timer);
             break;
         default:
             // Unhandled
@@ -3492,7 +3492,7 @@ static void cliBeeper(char *cmdline)
 
 static void printMap(uint8_t dumpMask, const rxConfig_t *rxConfig, const rxConfig_t *defaultRxConfig)
 {
-    bool equalsDefault = true;
+    /*bool equalsDefault = true;
     char buf[16];
     char bufDefault[16];
     uint32_t i;
@@ -3512,7 +3512,7 @@ static void printMap(uint8_t dumpMask, const rxConfig_t *rxConfig, const rxConfi
 
     const char *formatMap = "map %s";
     cliDefaultPrintLinef(dumpMask, equalsDefault, formatMap, bufDefault);
-    cliDumpPrintLinef(dumpMask, equalsDefault, formatMap, buf);
+    cliDumpPrintLinef(dumpMask, equalsDefault, formatMap, buf);*/
 }
 
 static void cliMap(char *cmdline)
@@ -4190,9 +4190,9 @@ static void cliStatus(char *cmdline)
 #endif
 
     cliPrintf("System load: %d", averageSystemLoadPercent);
-    const timeDelta_t pidTaskDeltaTime = getTaskDeltaTime(TASK_PID);
-    const int pidRate = pidTaskDeltaTime == 0 ? 0 : (int)(1000000.0f / ((float)pidTaskDeltaTime));
-    const int rxRate = getTaskDeltaTime(TASK_RX) == 0 ? 0 : (int)(1000000.0f / ((float)getTaskDeltaTime(TASK_RX)));
+    // const timeDelta_t pidTaskDeltaTime = getTaskDeltaTime(TASK_PID);
+    // const int pidRate = pidTaskDeltaTime == 0 ? 0 : (int)(1000000.0f / ((float)pidTaskDeltaTime));
+    // const int rxRate = getTaskDeltaTime(TASK_RX) == 0 ? 0 : (int)(1000000.0f / ((float)getTaskDeltaTime(TASK_RX)));
     const int systemRate = getTaskDeltaTime(TASK_SYSTEM) == 0 ? 0 : (int)(1000000.0f / ((float)getTaskDeltaTime(TASK_SYSTEM)));
     // cliPrintLinef(", cycle time: %d, PID rate: %d, RX rate: %d, System rate: %d",  (uint16_t)cycleTime, pidRate, rxRate, systemRate);
 #if !defined(CLI_MINIMAL_VERBOSITY)
@@ -4395,24 +4395,24 @@ static void cliResource(char *cmdline)
 static void backupConfigs(void)
 {
     // make copies of configs to do differencing
-    PG_FOREACH(pg) {
+    /*PG_FOREACH(pg) {
         if (pgIsProfile(pg)) {
             memcpy(pg->copy, pg->address, pgSize(pg) * MAX_PROFILE_COUNT);
         } else {
             memcpy(pg->copy, pg->address, pgSize(pg));
         }
-    }
+    }*/
 }
 
 static void restoreConfigs(void)
 {
-    PG_FOREACH(pg) {
+    /*PG_FOREACH(pg) {
         if (pgIsProfile(pg)) {
             memcpy(pg->address, pg->copy, pgSize(pg) * MAX_PROFILE_COUNT);
         } else {
             memcpy(pg->address, pg->copy, pgSize(pg));
         }
-    }
+    }*/
 }
 
 static void printConfig(const char *cmdline, bool doDiff)
@@ -4989,6 +4989,7 @@ static void cliHelp(char *cmdline)
 
 void cliProcess(void)
 {
+    PRINTF("Processing CLI process\n\r");
     if (!cliWriter) {
         return;
     }
@@ -5118,7 +5119,7 @@ void cliEnter(serialPort_t *serialPort)
     resetCommandBatch();
 #endif
 
-    ENABLE_ARMING_FLAG(ARMING_DISABLED_CLI);
+    // ENABLE_ARMING_FLAG(ARMING_DISABLED_CLI);
 }
 
 void cliInit(const serialConfig_t *serialConfig)

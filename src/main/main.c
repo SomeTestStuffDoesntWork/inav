@@ -47,7 +47,6 @@ serialPort_t *loopbackPort;
 static void loopbackInit(void)
 {
 #ifdef SOFTSERIAL_LOOPBACK
-#warning "Soft Serial is defined!"
     loopbackPort = softSerialLoopbackPort();
     serialPrint(loopbackPort, "LOOPBACK\r\n");
 #endif
@@ -55,8 +54,6 @@ static void loopbackInit(void)
 
 static void processLoopback(void)
 {
-    // For now, flash an LED to indicate that the device is alive.
-    blinkLed(1);
 #ifdef SOFTSERIAL_LOOPBACK
     if (loopbackPort) {
         uint8_t bytesWaiting;
@@ -78,7 +75,6 @@ int main(void)
 #endif
     init();
     loopbackInit();
-
     while (true) {
 #if defined(SITL_BUILD)
         serialProxyProcess();

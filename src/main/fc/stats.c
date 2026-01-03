@@ -48,21 +48,22 @@ uint32_t getFlyingEnergy(void) {
 
 void statsInit(void)
 {
-    prev_flight_count = statsConfig()->stats_flight_count;
+    // prev_flight_count = statsConfig()->stats_flight_count;
 }
 
 void statsOnArm(void)
 {
-    arm_millis      = millis();
+    /*arm_millis      = millis();
     arm_distance_cm = getTotalTravelDistance();
 #ifdef USE_ADC
     arm_mWhDrawn    = getMWhDrawn();
 #endif
+    */
 }
 
 void statsOnDisarm(void)
 {
-    if (statsConfig()->stats_enabled) {
+    /*if (statsConfig()->stats_enabled) {
         uint32_t dt = (millis() - arm_millis) / 1000;
         if (dt >= MIN_FLIGHT_TIME_TO_RECORD_STATS_S) {
             statsConfigMutable()->stats_total_time += dt;   //[s]
@@ -88,7 +89,7 @@ void statsOnDisarm(void)
 #endif
             saveConfigAndNotify();
         }
-    }
+    }*/
 }
 
 #endif

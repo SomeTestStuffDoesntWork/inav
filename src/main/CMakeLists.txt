@@ -253,14 +253,14 @@ main_sources(COMMON_SRC
 #    drivers/resource.h
 #    drivers/rcc.c
 #    drivers/rcc.h
-#    drivers/serial.c
-#    drivers/serial.h
+     drivers/serial.c
+     drivers/serial.h
 #    drivers/sound_beeper.c
 #    drivers/sound_beeper.h
 #    drivers/stack_check.c
 #    drivers/stack_check.h
-#    drivers/system.c
-#    drivers/system.h
+     drivers/system.c
+     drivers/system.h
 #
 #    drivers/temperature/ds18b20.c
 #    drivers/temperature/ds18b20.h
@@ -374,8 +374,8 @@ main_sources(COMMON_SRC
 #    io/lights.h
 #    io/piniobox.c
 #    io/piniobox.h
-#    io/serial.c
-#    io/serial.h
+     io/serial.c
+     io/serial.h
 #    io/serial_4way.c
 #    io/serial_4way.h
 #    io/serial_4way_avrootloader.c

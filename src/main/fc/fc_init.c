@@ -178,7 +178,7 @@ uint8_t systemState = SYSTEM_STATE_INITIALISING;
 
 void flashLedsAndBeep(void)
 {
-    LED1_ON;
+    /*LED1_ON;
     LED0_OFF;
     for (uint8_t i = 0; i < 10; i++) {
         LED1_TOGGLE;
@@ -190,7 +190,7 @@ void flashLedsAndBeep(void)
         BEEP_OFF;
     }
     LED0_OFF;
-    LED1_OFF;
+    LED1_OFF;*/
 }
 
 void init(void)
@@ -207,10 +207,10 @@ void init(void)
     // printfSupportInit();
 
     // Initialize system and CPU clocks to their initial values
-    // systemInit();
+    systemInit();
 
 #if !defined(SITL_BUILD)
-    // __enable_irq();
+    __enable_irq();
 #endif
 
     // initialize IO (needed for all IO operations)
@@ -560,7 +560,7 @@ void init(void)
     // failsafeInit();
 
     // rxInit();
-
+    PRINTF("After serial init\n\r");
 #if defined(USE_OSD)
     // displayPort_t *osdDisplayPort = NULL;
 #endif
@@ -592,7 +592,7 @@ void init(void)
         // osdInit(osdDisplayPort);
     }
 #endif
-
+PRINTF("After OSD Init\n\r");
 #if defined(USE_CMS) && defined(USE_SPEKTRUM_CMS_TELEMETRY) && defined(USE_TELEMETRY_SRXL)
     // Register the srxl Textgen telemetry sensor as a displayport device
     // cmsDisplayPortRegister(displayPortSrxlInit());
@@ -728,7 +728,7 @@ void init(void)
     // Latch active features AGAIN since some may be modified by init().
     // latchActiveFeatures();
     // motorControlEnable = true;
-
+    PRINTF("About to initialize Tasks\n\r");
     fcTasksInit();
 
 #ifdef USE_OSD
@@ -758,7 +758,7 @@ void init(void)
     // persistentObjectWrite(PERSISTENT_OBJECT_RESET_REASON, RESET_NONE);
 #endif
 
-    statsInit();
+    // statsInit();
 
     systemState |= SYSTEM_STATE_READY;
 }

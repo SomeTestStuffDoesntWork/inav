@@ -105,7 +105,10 @@ void taskHandleSerial(timeUs_t currentTimeUs)
 {
     UNUSED(currentTimeUs);
     // in cli mode, all serial stuff goes to here. enter cli mode by sending #
-    if (cliMode) {
+
+    // TODO: Forced into CLI mode via hard coded operation. May need to bring it back at some point...
+    // if (cliMode) {
+    if (true) {
         cliProcess();
     }
 
@@ -164,7 +167,7 @@ void taskProcessGPS(timeUs_t currentTimeUs)
     // if GPS feature is enabled, gpsThread() will be called at some intervals to check for stuck
     // hardware, wrong baud rates, init GPS if needed, etc. Don't use SENSOR_GPS here as gpsThread() can and will
     // change this based on available hardware
-    if (feature(FEATURE_GPS)) {
+    /*if (feature(FEATURE_GPS)) {
         if (gpsUpdate()) {
 #ifdef USE_WIND_ESTIMATOR
             updateWindEstimator(currentTimeUs);
@@ -174,31 +177,31 @@ void taskProcessGPS(timeUs_t currentTimeUs)
 
     if (sensors(SENSOR_GPS)) {
         updateGpsIndicator(currentTimeUs);
-    }
+    }*/
 }
 #endif
 
 #ifdef USE_MAG
 void taskUpdateCompass(timeUs_t currentTimeUs)
 {
-    if (sensors(SENSOR_MAG)) {
+    /*if (sensors(SENSOR_MAG)) {
         compassUpdate(currentTimeUs);
-    }
+    }*/
 }
 #endif
 
 #ifdef USE_ADSB
 void taskAdsb(timeUs_t currentTimeUs)
 {
-    UNUSED(currentTimeUs);
-    adsbTtlClean(currentTimeUs);
+    /*UNUSED(currentTimeUs);
+    adsbTtlClean(currentTimeUs);*/
 }
 #endif
 
 #ifdef USE_BARO
 void taskUpdateBaro(timeUs_t currentTimeUs)
 {
-    if (!sensors(SENSOR_BARO)) {
+    /*if (!sensors(SENSOR_BARO)) {
         return;
     }
 
@@ -208,13 +211,14 @@ void taskUpdateBaro(timeUs_t currentTimeUs)
     }
 
     updatePositionEstimator_BaroTopic(currentTimeUs);
+    */
 }
 #endif
 
 #ifdef USE_PITOT
 void taskUpdatePitot(timeUs_t currentTimeUs)
 {
-    if (!sensors(SENSOR_PITOT)) {
+    /*if (!sensors(SENSOR_PITOT)) {
         return;
     }
 
@@ -222,14 +226,14 @@ void taskUpdatePitot(timeUs_t currentTimeUs)
 
     if ( pitotIsHealthy()) {
         updatePositionEstimator_PitotTopic(currentTimeUs);
-    }
+    }*/
 }
 #endif
 
 #ifdef USE_RANGEFINDER
 void taskUpdateRangefinder(timeUs_t currentTimeUs)
 {
-    UNUSED(currentTimeUs);
+    /*UNUSED(currentTimeUs);
 
     if (!sensors(SENSOR_RANGEFINDER))
         return;
@@ -238,14 +242,14 @@ void taskUpdateRangefinder(timeUs_t currentTimeUs)
     const uint32_t newDeadline = rangefinderUpdate();
     if (newDeadline != 0) {
         rescheduleTask(TASK_SELF, newDeadline);
-    }
+    }*/
 
     /*
      * Process raw rangefinder readout
      */
-    if (rangefinderProcess(calculateCosTiltAngle())) {
-        updatePositionEstimator_SurfaceTopic(currentTimeUs, rangefinderGetLatestAltitude());
-    }
+    // if (rangefinderProcess(calculateCosTiltAngle())) {
+    //     updatePositionEstimator_SurfaceTopic(currentTimeUs, rangefinderGetLatestAltitude());
+    // }
 }
 #endif
 
@@ -253,7 +257,7 @@ void taskUpdateRangefinder(timeUs_t currentTimeUs)
 void taskUpdateIrlock(timeUs_t currentTimeUs)
 {
     UNUSED(currentTimeUs);
-    irlockUpdate();
+    // irlockUpdate();
 }
 #endif
 
@@ -298,9 +302,9 @@ void taskSmartportMaster(timeUs_t currentTimeUs)
 #ifdef USE_LED_STRIP
 void taskLedStrip(timeUs_t currentTimeUs)
 {
-    if (feature(FEATURE_LED_STRIP)) {
+    /*if (feature(FEATURE_LED_STRIP)) {
         ledStripUpdate(currentTimeUs);
-    }
+    }*/
 }
 #endif
 
@@ -317,9 +321,9 @@ void taskLedStrip(timeUs_t currentTimeUs)
 #ifdef USE_OSD
 void taskUpdateOsd(timeUs_t currentTimeUs)
 {
-    if (feature(FEATURE_OSD)) {
+    /*if (feature(FEATURE_OSD)) {
         osdUpdate(currentTimeUs);
-    }
+    }*/
 }
 #endif
 
@@ -339,14 +343,15 @@ void taskUpdateOsd(timeUs_t currentTimeUs)
 #ifdef USE_GEOZONE
 void geozoneUpdateTask(timeUs_t currentTimeUs)
 {
-    if (feature(FEATURE_GEOZONE)) {
+    /*if (feature(FEATURE_GEOZONE)) {
         geozoneUpdate(currentTimeUs);
-    }
+    }*/
 }
 #endif
 
 void fcTasksInit(void)
 {
+    PRINTF("Initializing FC Tasks\n\r");
     schedulerInit();
 
     // rescheduleTask(TASK_PID, getLooptime());

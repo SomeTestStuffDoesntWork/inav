@@ -49,96 +49,96 @@ typedef struct {
 typedef enum {
     /* Actual tasks */
     TASK_SYSTEM = 0,
-    TASK_PID,
-    TASK_GYRO,
-    TASK_RX,
+    // TASK_PID,
+    // TASK_GYRO,
+    // TASK_RX,
     TASK_SERIAL,
-    TASK_BATTERY,
-    TASK_TEMPERATURE,
+    // TASK_BATTERY,
+    // TASK_TEMPERATURE,
 #if defined(BEEPER) || defined(USE_DSHOT)
-    TASK_BEEPER,
+    // TASK_BEEPER,
 #endif
 #ifdef USE_LIGHTS
-    TASK_LIGHTS,
+    // TASK_LIGHTS,
 #endif
 #ifdef USE_GPS
-    TASK_GPS,
+    // TASK_GPS,
 #endif
 #ifdef USE_MAG
-    TASK_COMPASS,
+    // TASK_COMPASS,
 #endif
 #ifdef USE_BARO
-    TASK_BARO,
+    // TASK_BARO,
 #endif
 #ifdef USE_ADSB
-    TASK_ADSB,
+    // TASK_ADSB,
 #endif
 #ifdef USE_PITOT
-    TASK_PITOT,
+    // TASK_PITOT,
 #endif
 #ifdef USE_RANGEFINDER
-    TASK_RANGEFINDER,
+    // TASK_RANGEFINDER,
 #endif
 #ifdef USE_DASHBOARD
-    TASK_DASHBOARD,
+    // TASK_DASHBOARD,
 #endif
 #ifdef USE_TELEMETRY
-    TASK_TELEMETRY,
+    // TASK_TELEMETRY,
 #endif
 #ifdef USE_LED_STRIP
-    TASK_LEDSTRIP,
+    // TASK_LEDSTRIP,
 #endif
 #if defined(USE_SERVO_SBUS)
-    TASK_PWMDRIVER,
+    // TASK_PWMDRIVER,
 #endif
 #ifdef STACK_CHECK
-    TASK_STACK_CHECK,
+    // TASK_STACK_CHECK,
 #endif
 #ifdef USE_OSD
-    TASK_OSD,
+    // TASK_OSD,
 #endif
 #ifdef USE_CMS
-    TASK_CMS,
+    // TASK_CMS,
 #endif
 #ifdef USE_OPFLOW
-    TASK_OPFLOW,
+    // TASK_OPFLOW,
 #endif
 #ifdef USE_RCDEVICE
-    TASK_RCDEVICE,
+    // TASK_RCDEVICE,
 #endif
 #ifdef USE_VTX_CONTROL
-    TASK_VTXCTRL,
+    // TASK_VTXCTRL,
 #endif
 #ifdef USE_PROGRAMMING_FRAMEWORK
-    TASK_PROGRAMMING_FRAMEWORK,
+    // TASK_PROGRAMMING_FRAMEWORK,
 #endif
 #ifdef USE_RPM_FILTER
-    TASK_RPM_FILTER,
+    // TASK_RPM_FILTER,
 #endif
-    TASK_AUX,
+    // TASK_AUX,
 #if defined(USE_SMARTPORT_MASTER)
-    TASK_SMARTPORT_MASTER,
+    // TASK_SMARTPORT_MASTER,
 #endif
 #ifdef USE_IRLOCK
-    TASK_IRLOCK,
+    // TASK_IRLOCK,
 #endif
 #ifdef USE_ADAPTIVE_FILTER
-    TASK_ADAPTIVE_FILTER,
+    // TASK_ADAPTIVE_FILTER,
 #endif
 #ifdef USE_SERIAL_GIMBAL
-    TASK_GIMBAL,
+    // TASK_GIMBAL,
 #endif
 
 #ifdef USE_HEADTRACKER
-    TASK_HEADTRACKER,
+    // TASK_HEADTRACKER,
 #endif
 
 #if defined(USE_TELEMETRY) && defined(USE_TELEMETRY_SBUS2)
-    TASK_TELEMETRY_SBUS2,
+    // TASK_TELEMETRY_SBUS2,
 #endif
 
 #if defined (USE_GEOZONE) && defined(USE_GPS)
-    TASK_GEOZONE,
+    // TASK_GEOZONE,
 #endif
 
     /* Count of real tasks */

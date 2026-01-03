@@ -26,12 +26,12 @@ static EXTENDED_FASTRAM uint32_t activeFeaturesLatch = 0;
 
 void latchActiveFeatures(void)
 {
-    activeFeaturesLatch = featureConfig()->enabledFeatures;
+    // activeFeaturesLatch = featureConfig()->enabledFeatures;
 }
 
 bool featureConfigured(uint32_t mask)
 {
-    return (featureConfig()->enabledFeatures & mask) == mask;
+    return 0; // return (featureConfig()->enabledFeatures & mask) == mask;
 }
 
 bool feature(uint32_t mask)
@@ -42,20 +42,20 @@ bool feature(uint32_t mask)
 
 void featureSet(uint32_t mask)
 {
-    featureConfigMutable()->enabledFeatures |= mask;
+    // featureConfigMutable()->enabledFeatures |= mask;
 }
 
 void featureClear(uint32_t mask)
 {
-    featureConfigMutable()->enabledFeatures &= ~(mask);
+    // featureConfigMutable()->enabledFeatures &= ~(mask);
 }
 
 void featureClearAll(void)
 {
-    featureConfigMutable()->enabledFeatures = 0;
+    // featureConfigMutable()->enabledFeatures = 0;
 }
 
 uint32_t featureMask(void)
 {
-    return featureConfig()->enabledFeatures;
+    return 0;// featureConfig()->enabledFeatures;
 }

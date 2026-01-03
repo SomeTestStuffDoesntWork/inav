@@ -105,7 +105,7 @@ extern uint32_t SystemCoreClock;
  * microcontroller device. For systems with variable clock speed it also updates
  * the variable SystemCoreClock. SystemInit is called from startup_device file.
  */
-void SystemInit (void);
+extern void SystemInit (void);
 
 /**
  * @brief Updates the SystemCoreClock variable.

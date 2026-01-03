@@ -93,7 +93,6 @@ else()
 endif()
 
 set(MIMXRT1XXX_LINK_OPTIONS
-    #-nostartfiles
     --specs=nano.specs
     -static
     -Wl,-gc-sections

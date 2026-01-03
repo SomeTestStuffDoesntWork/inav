@@ -41,6 +41,9 @@
 
 #ifdef __APPLE__
 #define FASTRAM                     __attribute__ ((section("__DATA,__.fastram_bss"), aligned(8)))
+#elif defined(MIMXRT_106X)
+// Ram2 is DTC on 106X
+#define FASTRAM                     __attribute__((section(".data_RAM2"), aligned(4)))
 #else
 #define FASTRAM                     __attribute__ ((section(".fastram_bss"), aligned(4)))
 #endif
