@@ -654,6 +654,10 @@ void ResetISR(void) {
     __asm volatile ("cpsid i");
     __asm volatile ("MSR MSP, %0" : : "r" (&_vStackTop) : );
 
+    // Inav addition - Initialize persistant objects ASAP and check for boot requests
+    persistentObjectInit();
+    checkForBootLoaderRequest();
+
 #if defined (__USE_CMSIS)
 // If __USE_CMSIS defined, then call CMSIS SystemInit code
     SystemInit();

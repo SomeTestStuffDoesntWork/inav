@@ -755,7 +755,7 @@ PRINTF("After OSD Init\n\r");
 
 #if !defined(SITL_BUILD)
     // Considering that the persistent reset reason is only used during init
-    // persistentObjectWrite(PERSISTENT_OBJECT_RESET_REASON, RESET_NONE);
+    persistentObjectWrite(PERSISTENT_OBJECT_RESET_REASON, RESET_NONE);
 #endif
 
     // statsInit();

@@ -34,8 +34,7 @@
 
 void forcedSystemResetWithoutDisablingCaches(void)
 {
-    // TODO: Need to add reset reason to the reset source.
-    // persistentObjectWrite(PERSISTENT_OBJECT_RESET_REASON, RESET_NONE);
+    persistentObjectWrite(PERSISTENT_OBJECT_RESET_REASON, RESET_NONE);
     __disable_irq();
 
     // Calling the mapped system reset ISR will cause a soft system reset
@@ -76,7 +75,14 @@ void systemInit(void)
     // Slap some early debug lines in
     initUartComms(115200);
     reroutConsoleDebug(6, 115200);
+    // Clear the console before init
+    PRINTF("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r");
     PRINTF("UART INIT COMPLETE\n\r");
+    
+    // Dump persistent objects
+    PRINTF("Magic: %u\n\r", persistentObjectRead(PERSISTENT_OBJECT_MAGIC));
+    PRINTF("Reset Reason: %u\n\r", persistentObjectRead(PERSISTENT_OBJECT_RESET_REASON));
+
 
     // Configure NVIC preempt/priority groups
     __NVIC_SetPriorityGrouping(NVIC_PRIORITY_GROUPING);

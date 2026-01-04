@@ -95,7 +95,7 @@ void systemReset(void)
 
 void systemResetRequest(uint32_t requestId)
 {
-    // persistentObjectWrite(PERSISTENT_OBJECT_RESET_REASON, requestId);
+    persistentObjectWrite(PERSISTENT_OBJECT_RESET_REASON, requestId);
     systemReset();
 }
 
@@ -114,12 +114,12 @@ typedef struct isrVector_s {
 
 void checkForBootLoaderRequest(void)
 {
-    uint32_t bootloaderRequest = 0; // persistentObjectRead(PERSISTENT_OBJECT_RESET_REASON);
+    uint32_t bootloaderRequest = persistentObjectRead(PERSISTENT_OBJECT_RESET_REASON);
 
     if (bootloaderRequest != RESET_BOOTLOADER_REQUEST_ROM) {
         return;
     }
-    // persistentObjectWrite(PERSISTENT_OBJECT_RESET_REASON, RESET_NONE);
+    persistentObjectWrite(PERSISTENT_OBJECT_RESET_REASON, RESET_NONE);
 
     volatile isrVector_t *bootloaderVector = (isrVector_t *)systemBootloaderAddress();
     __set_MSP(bootloaderVector->stackEnd);

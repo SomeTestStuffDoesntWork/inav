@@ -211,8 +211,8 @@ main_sources(COMMON_SRC
 #
 #    drivers/osd.c
 #    drivers/osd.h
-#    drivers/persistent.c
-#    drivers/persistent.h
+     drivers/persistent.c
+     drivers/persistent.h
 #    drivers/pitotmeter/pitotmeter_adc.c
 #    drivers/pitotmeter/pitotmeter_adc.h
 #    drivers/pitotmeter/pitotmeter_ms4525.c

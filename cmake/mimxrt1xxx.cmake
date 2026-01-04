@@ -182,6 +182,15 @@ function(add_mimxrt1xxx_executable)
         # Start parsing after the known arguments
         ${ARGN}
     )
+
+    # There are several source files that cannot be included for this device and must be fully omitted. 
+    # Any required symbols are swapped out in the 'targets' directory.
+    main_sources(MIMXRT1XXXX_SWAPPED_SOURCES
+        drivers/persistent.c # Persistent implementations can vary wildly across chip peripherals. Must define a device-specific version.
+    )
+
+    exclude(args_SOURCES "${MIMXRT1XXXX_SWAPPED_SOURCES}")
+
     set(elf_target ${args_NAME}.elf)
     add_executable(${elf_target})
     target_sources(${elf_target} PRIVATE ${args_SOURCES})
